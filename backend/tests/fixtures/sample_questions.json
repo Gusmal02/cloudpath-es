@@ -1,0 +1,57 @@
+[
+  {
+    "id": "test-tech-001",
+    "text": "Una empresa necesita almacenar imágenes de productos con acceso global. ¿Qué servicio de AWS usarías?",
+    "options": ["Amazon EBS", "Amazon S3", "Amazon EFS", "Amazon RDS"],
+    "correct_index": 1,
+    "explanation": "Amazon S3 es el servicio de almacenamiento de objetos de AWS, ideal para archivos estáticos con acceso global.",
+    "domain": "TECHNOLOGY",
+    "provider": "AWS",
+    "difficulty": "easy"
+  },
+  {
+    "id": "test-tech-002",
+    "text": "Una startup necesita una base de datos relacional administrada. ¿Cuál es la opción más adecuada?",
+    "options": ["Amazon DynamoDB", "Amazon S3", "Amazon RDS", "Amazon Redshift"],
+    "correct_index": 2,
+    "explanation": "Amazon RDS es el servicio de base de datos relacional administrada de AWS.",
+    "domain": "TECHNOLOGY",
+    "provider": "AWS",
+    "difficulty": "easy"
+  },
+  {
+    "id": "test-security-001",
+    "text": "¿Qué servicio de AWS permite gestionar permisos y accesos a recursos de la nube?",
+    "options": ["Amazon S3", "AWS IAM", "Amazon EC2", "AWS CloudTrail"],
+    "correct_index": 1,
+    "explanation": "AWS IAM (Identity and Access Management) permite gestionar el acceso a los servicios y recursos de AWS.",
+    "domain": "SECURITY",
+    "provider": "AWS",
+    "difficulty": "easy"
+  },
+  {
+    "id": "test-billing-001",
+    "text": "¿Qué herramienta de AWS permite estimar el costo mensual de una arquitectura antes de implementarla?",
+    "options": ["AWS Cost Explorer", "AWS Pricing Calculator", "AWS Budgets", "AWS Trusted Advisor"],
+    "correct_index": 1,
+    "explanation": "AWS Pricing Calculator permite estimar costos de arquitecturas antes de implementarlas.",
+    "domain": "BILLING",
+    "provider": "AWS",
+    "difficulty": "easy"
+  },
+  {
+    "id": "test-concepts-001",
+    "text": "¿Cuál de los siguientes describe mejor el modelo de responsabilidad compartida de AWS?",
+    "options": [
+      "AWS es responsable de todo",
+      "El cliente es responsable de todo",
+      "AWS gestiona la infraestructura; el cliente gestiona sus datos y configuraciones",
+      "Ambos comparten costos de forma equitativa"
+    ],
+    "correct_index": 2,
+    "explanation": "En el modelo de responsabilidad compartida, AWS gestiona la seguridad 'de' la nube y el cliente gestiona la seguridad 'en' la nube.",
+    "domain": "CLOUD_CONCEPTS",
+    "provider": "AWS",
+    "difficulty": "medium"
+  }
+]

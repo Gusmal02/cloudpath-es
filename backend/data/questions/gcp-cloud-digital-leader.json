@@ -1,0 +1,357 @@
+[
+  {
+    "id": "gcp-cdl-concepts-001",
+    "text": "¿Cuál es la diferencia entre una región y una zona en Google Cloud?",
+    "options": [
+      "Una región es un centro de datos individual; una zona es un grupo de regiones",
+      "Una región es una ubicación geográfica con múltiples zonas; una zona es un área de despliegue aislada dentro de esa región",
+      "Son términos equivalentes en GCP",
+      "Una zona contiene múltiples regiones"
+    ],
+    "correct_index": 1,
+    "explanation": "En Google Cloud, una región (ej: us-central1) es una ubicación geográfica específica. Dentro de cada región hay múltiples zonas (ej: us-central1-a, us-central1-b), que son centros de datos independientes con electricidad, refrigeración y red propias. Desplegar recursos en múltiples zonas garantiza alta disponibilidad ante fallos localizados.",
+    "domain": "CLOUD_CONCEPTS",
+    "provider": "GCP",
+    "difficulty": "easy"
+  },
+  {
+    "id": "gcp-cdl-concepts-002",
+    "text": "¿Qué modelo de servicio en la nube describe a Google Cloud cuando ofrece Compute Engine (máquinas virtuales)?",
+    "options": ["SaaS (Software como Servicio)", "PaaS (Plataforma como Servicio)", "IaaS (Infraestructura como Servicio)", "FaaS (Función como Servicio)"],
+    "correct_index": 2,
+    "explanation": "Compute Engine es IaaS: Google proporciona la infraestructura virtualizada (CPU, RAM, disco, red) y el cliente gestiona el sistema operativo, middleware y aplicaciones. PaaS sería App Engine (tú solo subes el código), SaaS son las apps de Google Workspace (Gmail, Docs), y FaaS es Cloud Functions (código sin servidor).",
+    "domain": "CLOUD_CONCEPTS",
+    "provider": "GCP",
+    "difficulty": "easy"
+  },
+  {
+    "id": "gcp-cdl-concepts-003",
+    "text": "¿Cómo se organiza la jerarquía de recursos en Google Cloud?",
+    "options": [
+      "Proyectos → Carpetas → Organización",
+      "Organización → Carpetas → Proyectos → Recursos",
+      "Recursos → Proyectos → Organización",
+      "Organización → Proyectos → Recursos (sin carpetas)"
+    ],
+    "correct_index": 1,
+    "explanation": "La jerarquía en GCP es: Organización (empresa, raíz) → Carpetas (departamentos/equipos) → Proyectos (unidad de facturación y aislamiento) → Recursos (VMs, buckets, bases de datos). Los permisos y políticas heredan hacia abajo. Esta estructura permite gestionar miles de recursos con control centralizado.",
+    "domain": "CLOUD_CONCEPTS",
+    "provider": "GCP",
+    "difficulty": "medium"
+  },
+  {
+    "id": "gcp-cdl-concepts-004",
+    "text": "¿Qué es la 'red troncal global' de Google y cómo beneficia a los clientes de Google Cloud?",
+    "options": [
+      "Es una red privada de fibra óptica que conecta los centros de datos de Google globalmente, reduciendo latencia",
+      "Es el nombre de los cables submarinos que Google instala para competir con AWS",
+      "Es una VPN compartida entre todos los clientes de GCP",
+      "Es el sistema de DNS global de Google"
+    ],
+    "correct_index": 0,
+    "explanation": "Google posee y opera una red privada de fibra óptica global que interconecta sus más de 30 regiones. El tráfico entre regiones de GCP viaja por esta red privada en lugar de por el internet público, lo que reduce latencia, aumenta seguridad y mejora la velocidad. Esto es una ventaja competitiva de GCP respecto a proveedores sin red propia.",
+    "domain": "CLOUD_CONCEPTS",
+    "provider": "GCP",
+    "difficulty": "medium"
+  },
+  {
+    "id": "gcp-cdl-concepts-005",
+    "text": "¿Qué significa que Google Cloud tenga un modelo de responsabilidad compartida?",
+    "options": [
+      "Google y el cliente comparten la factura mensual al 50%",
+      "Google gestiona la seguridad de la infraestructura física; el cliente gestiona la seguridad de lo que despliega en ella",
+      "El cliente puede delegar toda la seguridad a Google pagando un plan premium",
+      "Solo Google es responsable si ocurre una brecha de seguridad"
+    ],
+    "correct_index": 1,
+    "explanation": "En el modelo de responsabilidad compartida, Google es responsable de la seguridad de la nube (hardware, red física, instalaciones). El cliente es responsable de la seguridad en la nube: configuración de accesos IAM, cifrado de datos, configuración de redes, y seguridad de las aplicaciones. La responsabilidad del cliente varía según el modelo: más en IaaS, menos en SaaS.",
+    "domain": "CLOUD_CONCEPTS",
+    "provider": "GCP",
+    "difficulty": "easy"
+  },
+  {
+    "id": "gcp-cdl-concepts-006",
+    "text": "¿Cuál es el beneficio principal de usar múltiples zonas de disponibilidad en Google Cloud?",
+    "options": [
+      "Reducir el costo de las máquinas virtuales",
+      "Garantizar alta disponibilidad ante el fallo de una zona",
+      "Cumplir con regulaciones de privacidad de datos",
+      "Aumentar el rendimiento de CPU de las instancias"
+    ],
+    "correct_index": 1,
+    "explanation": "Al desplegar recursos en múltiples zonas dentro de una región, si una zona falla (por mantenimiento, desastre local, etc.) las cargas de trabajo continúan en las otras zonas. Los balanceadores de carga regional de GCP distribuyen tráfico entre zonas automáticamente. Para recuperación ante desastres mayor, se usan múltiples regiones.",
+    "domain": "CLOUD_CONCEPTS",
+    "provider": "GCP",
+    "difficulty": "easy"
+  },
+  {
+    "id": "gcp-cdl-security-001",
+    "text": "¿Qué servicio de Google Cloud gestiona identidades y accesos a los recursos de GCP?",
+    "options": ["Google Workspace Admin", "Cloud Identity and Access Management (IAM)", "Cloud Armor", "Identity Platform"],
+    "correct_index": 1,
+    "explanation": "Cloud IAM (Identity and Access Management) controla quién (identidad: usuarios, grupos, cuentas de servicio) puede hacer qué (roles con permisos) en qué recurso. Los roles pueden ser básicos (Viewer, Editor, Owner), predefinidos (específicos de servicio) o personalizados. Es la capa central de control de acceso en GCP.",
+    "domain": "SECURITY",
+    "provider": "GCP",
+    "difficulty": "easy"
+  },
+  {
+    "id": "gcp-cdl-security-002",
+    "text": "¿Qué es una cuenta de servicio (service account) en Google Cloud y para qué se usa?",
+    "options": [
+      "Una cuenta para el soporte técnico de Google",
+      "Una identidad para aplicaciones o servicios, no para personas, que permite a los recursos llamar a APIs de GCP",
+      "Una cuenta compartida para equipos de desarrollo",
+      "Una cuenta gratuita para startups"
+    ],
+    "correct_index": 1,
+    "explanation": "Una service account es una identidad IAM especial que representa a una aplicación o VM, no a una persona. Permite que, por ejemplo, una VM de Compute Engine acceda a Cloud Storage sin usar credenciales personales. Las service accounts reciben roles IAM como cualquier usuario, siguiendo el principio de mínimo privilegio.",
+    "domain": "SECURITY",
+    "provider": "GCP",
+    "difficulty": "medium"
+  },
+  {
+    "id": "gcp-cdl-security-003",
+    "text": "¿Qué servicio de Google Cloud protege aplicaciones web y APIs contra ataques DDoS y vulnerabilidades OWASP?",
+    "options": ["Cloud Firewall", "Cloud Armor", "VPC Service Controls", "Cloud IDS"],
+    "correct_index": 1,
+    "explanation": "Cloud Armor es el WAF/DDoS de GCP. Protege contra ataques DDoS volumétricos, inyección SQL, XSS y otras vulnerabilidades OWASP con políticas de seguridad pre-configuradas. Se integra con el balanceador de carga HTTP global de GCP. Cloud Firewall gestiona reglas de red, y VPC Service Controls limita el acceso a APIs de GCP.",
+    "domain": "SECURITY",
+    "provider": "GCP",
+    "difficulty": "medium"
+  },
+  {
+    "id": "gcp-cdl-security-004",
+    "text": "¿Qué característica de VPC en GCP permite limitar el acceso a APIs de Google Cloud (como BigQuery o Cloud Storage) solo a recursos dentro de un perímetro definido?",
+    "options": ["VPC Peering", "Cloud Interconnect", "VPC Service Controls", "Private Google Access"],
+    "correct_index": 2,
+    "explanation": "VPC Service Controls crea un perímetro de seguridad alrededor de servicios de GCP para prevenir exfiltración de datos. Por ejemplo, puede restringir que solo las VMs de un proyecto específico accedan a un bucket de Cloud Storage, bloqueando accesos desde fuera aunque tengan permisos IAM. Es clave para cumplimiento en entornos con datos sensibles.",
+    "domain": "SECURITY",
+    "provider": "GCP",
+    "difficulty": "hard"
+  },
+  {
+    "id": "gcp-cdl-security-005",
+    "text": "¿Qué servicio de GCP gestiona y rota automáticamente las claves de cifrado de los datos almacenados en Cloud Storage, BigQuery y otros servicios?",
+    "options": ["Cloud HSM", "Cloud Key Management Service (Cloud KMS)", "Secret Manager", "Certificate Authority Service"],
+    "correct_index": 1,
+    "explanation": "Cloud KMS gestiona claves criptográficas usadas para cifrar datos en reposo en GCP. Permite usar claves gestionadas por Google (GMEK), claves gestionadas por el cliente (CMEK) o claves propias del cliente (CSEK). Secret Manager almacena secretos de aplicación (contraseñas, API keys), y Cloud HSM protege claves en módulos de hardware certificados FIPS 140-2.",
+    "domain": "SECURITY",
+    "provider": "GCP",
+    "difficulty": "medium"
+  },
+  {
+    "id": "gcp-cdl-security-006",
+    "text": "¿Qué servicio de GCP registra todas las llamadas a las APIs de Google Cloud para auditoría y análisis de seguridad?",
+    "options": ["Cloud Monitoring", "Cloud Logging con Cloud Audit Logs", "Error Reporting", "Cloud Trace"],
+    "correct_index": 1,
+    "explanation": "Cloud Audit Logs registra automáticamente todas las actividades administrativas (quién creó/modificó/eliminó recursos), accesos a datos y eventos del sistema en GCP. Es el equivalente a AWS CloudTrail. Los logs se almacenan en Cloud Logging y pueden exportarse a Cloud Storage o BigQuery para análisis de largo plazo.",
+    "domain": "SECURITY",
+    "provider": "GCP",
+    "difficulty": "medium"
+  },
+  {
+    "id": "gcp-cdl-security-007",
+    "text": "¿Cuál es el principio de seguridad que recomienda dar a cada usuario o servicio los permisos mínimos necesarios para realizar su trabajo?",
+    "options": ["Defensa en profundidad", "Principio de mínimo privilegio", "Separación de responsabilidades", "Zero Trust"],
+    "correct_index": 1,
+    "explanation": "El principio de mínimo privilegio (Least Privilege) establece que cada entidad debe tener solo los permisos estrictamente necesarios para sus tareas. En GCP, esto significa asignar roles predefinidos específicos en lugar de roles básicos amplios (Editor/Owner). Por ejemplo, dar Storage Object Viewer en lugar de roles de proyecto amplios.",
+    "domain": "SECURITY",
+    "provider": "GCP",
+    "difficulty": "easy"
+  },
+  {
+    "id": "gcp-cdl-tech-001",
+    "text": "¿Qué servicio de GCP es equivalente a AWS EC2, proporcionando máquinas virtuales configurables?",
+    "options": ["Google Kubernetes Engine", "Cloud Run", "Compute Engine", "App Engine"],
+    "correct_index": 2,
+    "explanation": "Compute Engine es el servicio IaaS de GCP equivalente a AWS EC2. Permite crear VMs con diferentes tipos de máquina (CPU, RAM), sistemas operativos y almacenamiento. GKE gestiona clusters de Kubernetes (equivale a AWS EKS), Cloud Run ejecuta contenedores serverless, y App Engine es la plataforma PaaS para aplicaciones web.",
+    "domain": "TECHNOLOGY",
+    "provider": "GCP",
+    "difficulty": "easy"
+  },
+  {
+    "id": "gcp-cdl-tech-002",
+    "text": "¿Qué servicio de GCP es el equivalente a AWS S3 para almacenamiento de objetos?",
+    "options": ["Cloud Filestore", "Persistent Disk", "Cloud Storage", "Cloud SQL"],
+    "correct_index": 2,
+    "explanation": "Cloud Storage es el almacenamiento de objetos de GCP, equivalente a Amazon S3. Ofrece alta durabilidad, disponibilidad global y múltiples clases: Standard (acceso frecuente), Nearline (acceso mensual), Coldline (acceso trimestral) y Archive (acceso anual). Persistent Disk es almacenamiento en bloque para VMs (equivale a EBS), y Cloud Filestore es sistema de archivos compartido.",
+    "domain": "TECHNOLOGY",
+    "provider": "GCP",
+    "difficulty": "easy"
+  },
+  {
+    "id": "gcp-cdl-tech-003",
+    "text": "¿Cuál es la diferencia entre Cloud Run y Cloud Functions en Google Cloud?",
+    "options": [
+      "Cloud Run ejecuta contenedores HTTP serverless; Cloud Functions ejecuta funciones individuales activadas por eventos",
+      "Cloud Functions ejecuta contenedores; Cloud Run ejecuta funciones",
+      "Son idénticos, solo tienen diferente precio",
+      "Cloud Run requiere Kubernetes; Cloud Functions no"
+    ],
+    "correct_index": 0,
+    "explanation": "Cloud Run ejecuta contenedores Docker completos en respuesta a solicitudes HTTP (similar a AWS App Runner/Fargate). Cloud Functions ejecuta funciones individuales en respuesta a eventos (HTTP, Pub/Sub, Cloud Storage, Firestore). Cloud Functions es el equivalente a AWS Lambda, Cloud Run es más flexible porque acepta cualquier contenedor.",
+    "domain": "TECHNOLOGY",
+    "provider": "GCP",
+    "difficulty": "medium"
+  },
+  {
+    "id": "gcp-cdl-tech-004",
+    "text": "¿Qué servicio de GCP es el equivalente a AWS DynamoDB, ofreciendo una base de datos NoSQL documental serverless?",
+    "options": ["Cloud Bigtable", "Cloud Spanner", "Firestore", "Memorystore"],
+    "correct_index": 2,
+    "explanation": "Firestore (antes Cloud Datastore) es la base de datos NoSQL documental serverless de GCP, el más cercano a DynamoDB. Permite sincronización en tiempo real (ideal para apps móviles/web) y escala automáticamente. Bigtable es para analytics a escala masiva (equivale a Cassandra/HBase), Spanner es SQL distribuido globalmente, y Memorystore es Redis/Memcached administrado.",
+    "domain": "TECHNOLOGY",
+    "provider": "GCP",
+    "difficulty": "medium"
+  },
+  {
+    "id": "gcp-cdl-tech-005",
+    "text": "¿Qué servicio de GCP usa el modelo pub/sub para mensajería asíncrona a escala, equivalente a AWS SNS+SQS?",
+    "options": ["Cloud Tasks", "Eventarc", "Pub/Sub", "Cloud Scheduler"],
+    "correct_index": 2,
+    "explanation": "Cloud Pub/Sub es el servicio de mensajería asíncrona de GCP. Los publicadores envían mensajes a temas (topics) y los suscriptores los reciben. Combina características de SNS (distribución a múltiples suscriptores) y SQS (colas de mensajes con garantía de entrega). Cloud Tasks gestiona colas de tareas con reintentos, y Eventarc enruta eventos de servicios GCP.",
+    "domain": "TECHNOLOGY",
+    "provider": "GCP",
+    "difficulty": "medium"
+  },
+  {
+    "id": "gcp-cdl-tech-006",
+    "text": "¿Para qué se usa BigQuery en Google Cloud?",
+    "options": [
+      "Como base de datos transaccional para aplicaciones web",
+      "Como data warehouse serverless para analizar terabytes o petabytes de datos con SQL",
+      "Como sistema de caché en memoria para acelerar consultas",
+      "Como base de datos de documentos para aplicaciones móviles"
+    ],
+    "correct_index": 1,
+    "explanation": "BigQuery es el data warehouse serverless y multi-nube de GCP para análisis a gran escala. Permite ejecutar consultas SQL sobre terabytes de datos en segundos sin gestionar infraestructura. Es columnar, lo que lo hace altamente eficiente para análisis. Equivale a Amazon Redshift. No es adecuado para aplicaciones transaccionales de baja latencia.",
+    "domain": "TECHNOLOGY",
+    "provider": "GCP",
+    "difficulty": "easy"
+  },
+  {
+    "id": "gcp-cdl-tech-007",
+    "text": "¿Qué servicio de GCP gestiona clusters de Kubernetes, equivalente a AWS EKS?",
+    "options": ["Cloud Run", "App Engine Flex", "Google Kubernetes Engine (GKE)", "Compute Engine Managed Instance Groups"],
+    "correct_index": 2,
+    "explanation": "GKE (Google Kubernetes Engine) es el servicio de Kubernetes administrado de GCP. Google inventó Kubernetes, por lo que GKE suele considerarse la implementación más madura. GKE gestiona el plano de control, actualizaciones automáticas, escalado de nodos y monitoreo integrado. Cloud Run usa Knative sobre Kubernetes pero abstrae la gestión del cluster.",
+    "domain": "TECHNOLOGY",
+    "provider": "GCP",
+    "difficulty": "easy"
+  },
+  {
+    "id": "gcp-cdl-tech-008",
+    "text": "¿Qué servicio de GCP es equivalente a AWS CloudFormation para definir y desplegar infraestructura como código?",
+    "options": ["Cloud Build", "Cloud Deployment Manager", "Config Connector", "Terraform (open source)"],
+    "correct_index": 1,
+    "explanation": "Cloud Deployment Manager es la herramienta nativa de IaC de GCP, usando archivos YAML/Jinja2/Python para definir recursos. Sin embargo, en la práctica la mayoría de equipos usan Terraform (que soporta GCP, AWS y Azure) por su ecosistema más maduro. Cloud Build es CI/CD, y Config Connector gestiona recursos GCP desde Kubernetes.",
+    "domain": "TECHNOLOGY",
+    "provider": "GCP",
+    "difficulty": "medium"
+  },
+  {
+    "id": "gcp-cdl-tech-009",
+    "text": "¿Qué servicio de GCP monitorea el rendimiento, los logs y las métricas de las aplicaciones y la infraestructura?",
+    "options": ["Cloud Profiler", "Cloud Trace", "Cloud Monitoring (antes Stackdriver)", "Error Reporting"],
+    "correct_index": 2,
+    "explanation": "Cloud Monitoring (parte de Google Cloud Observability, antes Stackdriver) recopila métricas, logs y trazas de GCP, AWS y recursos on-premises. Permite crear dashboards, alertas y políticas de notificación. Es el equivalente a Amazon CloudWatch. Cloud Trace analiza la latencia de solicitudes, y Cloud Profiler identifica cuellos de botella en el código.",
+    "domain": "TECHNOLOGY",
+    "provider": "GCP",
+    "difficulty": "easy"
+  },
+  {
+    "id": "gcp-cdl-aiml-001",
+    "text": "¿Qué servicio de GCP es la plataforma de ML administrada equivalente a AWS SageMaker?",
+    "options": ["AutoML", "AI Platform / Vertex AI", "Cloud TPU", "Cloud Natural Language API"],
+    "correct_index": 1,
+    "explanation": "Vertex AI (antes AI Platform) es la plataforma MLOps unificada de GCP para construir, entrenar, desplegar y monitorear modelos de ML. Incluye AutoML (sin código), entrenamiento personalizado, Vertex AI Workbench (notebooks administrados), Feature Store y Model Registry. Equivale a AWS SageMaker.",
+    "domain": "AI_ML",
+    "provider": "GCP",
+    "difficulty": "medium"
+  },
+  {
+    "id": "gcp-cdl-aiml-002",
+    "text": "¿Qué API de GCP permite extraer entidades, sentimiento e intención de texto sin entrenar un modelo personalizado?",
+    "options": ["Cloud Translation API", "Cloud Natural Language API", "Dialogflow", "Cloud Vision API"],
+    "correct_index": 1,
+    "explanation": "Cloud Natural Language API analiza texto para extraer entidades (personas, lugares, organizaciones), sentimiento (positivo/negativo/neutro), categorías de contenido y sintaxis. Es una API pre-entrenada, sin necesidad de datos propios. Cloud Vision API analiza imágenes, Dialogflow crea chatbots conversacionales, y Cloud Translation traduce idiomas.",
+    "domain": "AI_ML",
+    "provider": "GCP",
+    "difficulty": "medium"
+  },
+  {
+    "id": "gcp-cdl-billing-001",
+    "text": "¿Cómo funciona el modelo de precios de Google Cloud Compute Engine a diferencia de otras nubes?",
+    "options": [
+      "Cobra por hora completa aunque uses la instancia solo un minuto",
+      "Cobra por segundo con un mínimo de 1 minuto, y aplica descuentos automáticos por uso sostenido",
+      "Solo ofrece precios anuales, no hay pago por uso",
+      "El precio es fijo independientemente del tipo de máquina"
+    ],
+    "correct_index": 1,
+    "explanation": "GCP cobra Compute Engine por segundo (mínimo 1 minuto), lo que beneficia cargas de trabajo cortas. Además aplica automáticamente 'Sustained Use Discounts' (descuentos por uso sostenido): si usas una VM más del 25% del mes, el descuento se aplica automáticamente sin necesidad de compromisos. Los 'Committed Use Discounts' ofrecen más descuento a cambio de compromisos de 1-3 años.",
+    "domain": "BILLING",
+    "provider": "GCP",
+    "difficulty": "medium"
+  },
+  {
+    "id": "gcp-cdl-billing-002",
+    "text": "¿Qué herramienta de GCP permite estimar el costo de una arquitectura antes de desplegarla?",
+    "options": ["Cloud Billing Reports", "Google Cloud Pricing Calculator", "Cloud Cost Recommender", "BigQuery Billing Export"],
+    "correct_index": 1,
+    "explanation": "El Google Cloud Pricing Calculator (cloud.google.com/products/calculator) permite estimar costos seleccionando servicios, regiones y configuraciones. Es útil para planificar presupuestos antes de crear recursos. Cloud Billing Reports muestra costos históricos, y Cost Recommender sugiere optimizaciones en recursos existentes.",
+    "domain": "BILLING",
+    "provider": "GCP",
+    "difficulty": "easy"
+  },
+  {
+    "id": "gcp-cdl-billing-003",
+    "text": "¿Qué son los 'Committed Use Discounts' (CUD) en Google Cloud?",
+    "options": [
+      "Descuentos automáticos por usar una VM más de 25% del mes",
+      "Descuentos de hasta 57% a cambio de comprometerse a usar una cantidad de recursos por 1 o 3 años",
+      "Descuentos para startups en su primer año",
+      "Descuentos por pagar con tarjeta de crédito específica"
+    ],
+    "correct_index": 1,
+    "explanation": "Los Committed Use Discounts son el equivalente a las instancias reservadas de AWS: te comprometes a usar una cantidad de recursos (CPU, RAM) por 1 o 3 años y obtienes hasta 57% de descuento sobre el precio bajo demanda. No es una reserva de instancias específicas, sino de recursos de cómputo flexibles. Los Sustained Use Discounts son el descuento automático sin compromiso.",
+    "domain": "BILLING",
+    "provider": "GCP",
+    "difficulty": "medium"
+  },
+  {
+    "id": "gcp-cdl-billing-004",
+    "text": "¿Cómo pueden múltiples equipos en una empresa compartir una conexión de facturación en GCP manteniendo costos separados?",
+    "options": [
+      "Es imposible, cada proyecto debe tener su propia cuenta de facturación",
+      "Usando una cuenta de facturación vinculada a múltiples proyectos con etiquetas de asignación de costos",
+      "Creando una cuenta de facturación por persona",
+      "Pagando todo con la cuenta personal del administrador"
+    ],
+    "correct_index": 1,
+    "explanation": "En GCP, una sola cuenta de facturación puede vincularse a múltiples proyectos. Cada proyecto es la unidad de aislamiento de recursos y costos. Usando etiquetas (labels) en recursos y exportando facturación a BigQuery, se puede desglosar el gasto por equipo, aplicación o entorno. Esto equivale a AWS Organizations con facturación consolidada.",
+    "domain": "BILLING",
+    "provider": "GCP",
+    "difficulty": "medium"
+  },
+  {
+    "id": "gcp-cdl-billing-005",
+    "text": "¿Cuál de las siguientes instancias de Compute Engine ofrece el mayor descuento pero puede ser interrumpida por Google con 30 segundos de aviso?",
+    "options": ["Instancias reservadas (Committed Use)", "Instancias estándar bajo demanda", "Instancias Spot (antes Preemptible VMs)", "Instancias sostenidas"],
+    "correct_index": 2,
+    "explanation": "Las Spot VMs (antes Preemptible) ofrecen hasta 91% de descuento sobre el precio bajo demanda, pero Google puede reclamarlas con 30 segundos de aviso cuando necesita la capacidad. Son ideales para cargas tolerantes a fallos como procesamiento batch, renderizado o entrenamiento de ML. Para cargas críticas se usan instancias bajo demanda o con CUD.",
+    "domain": "BILLING",
+    "provider": "GCP",
+    "difficulty": "medium"
+  },
+  {
+    "id": "gcp-cdl-billing-006",
+    "text": "¿Qué servicio de GCP ayuda a identificar recursos sobredimensionados y sugiere formas de reducir costos?",
+    "options": ["Cloud Billing Reports", "Cost Recommender", "Cloud Asset Inventory", "Active Assist"],
+    "correct_index": 1,
+    "explanation": "El Cost Recommender analiza el uso de recursos de los últimos 8 días y sugiere acciones para reducir costos: como reducir el tipo de VM sobredimensionada, eliminar recursos sin uso, o reservar instancias que se usan continuamente. Active Assist es el paraguas que agrupa varios recommenders de GCP incluyendo el de costos.",
+    "domain": "BILLING",
+    "provider": "GCP",
+    "difficulty": "medium"
+  }
+]

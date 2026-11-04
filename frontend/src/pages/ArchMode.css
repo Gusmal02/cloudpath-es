@@ -1,0 +1,178 @@
+.arch-toolbar {
+  align-items: center;
+  background: var(--surface);
+  border-bottom: 1px solid color-mix(in srgb, var(--accent) 15%, transparent);
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.5rem 1rem;
+}
+
+.arch-name-input {
+  background: var(--base);
+  border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
+  border-radius: 0.375rem;
+  color: var(--text, #1e293b);
+  flex: 1;
+  font-size: 0.875rem;
+  max-width: 360px;
+  padding: 0.375rem 0.625rem;
+}
+.arch-name-input:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.arch-layout {
+  display: flex;
+  height: calc(100vh - 56px - 44px);
+}
+
+.arch-analyze-btn {
+  margin-left: auto;
+}
+
+.arch-analyze-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.arch-canvas {
+  flex: 1;
+  height: 100%;
+}
+
+/* Service palette */
+.arch-palette {
+  background: var(--surface);
+  border-right: 1px solid color-mix(in srgb, var(--accent) 12%, transparent);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  overflow-y: auto;
+  width: 200px;
+}
+
+.arch-palette-group {}
+.arch-palette-category {
+  background: var(--base);
+  color: color-mix(in srgb, var(--accent) 70%, #000);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  padding: 0.35rem 0.75rem 0.2rem;
+  position: sticky;
+  text-transform: uppercase;
+  top: 0;
+}
+.arch-palette-item {
+  align-items: center;
+  background: none;
+  border: none;
+  border-bottom: 1px solid color-mix(in srgb, var(--accent) 8%, transparent);
+  color: inherit;
+  cursor: pointer;
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.45rem 0.75rem;
+  text-align: left;
+  width: 100%;
+}
+.arch-palette-item:hover {
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+}
+.arch-palette-item-icon { flex-shrink: 0; font-size: 1.1rem; text-align: center; width: 1.5rem; }
+.arch-palette-item-text { display: flex; flex-direction: column; gap: 0.1rem; min-width: 0; }
+.arch-palette-item-label { font-size: 0.8rem; font-weight: 500; }
+.arch-palette-item-desc {
+  color: #64748b;
+  display: -webkit-box;
+  font-size: 0.65rem;
+  line-height: 1.3;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+/* Allow delete button to overflow node wrapper */
+.react-flow__node-service { overflow: visible !important; }
+
+/* Service node */
+.service-node {
+  align-items: center;
+  background: var(--surface);
+  border: 2px solid color-mix(in srgb, var(--accent) 30%, transparent);
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 80px;
+  padding: 0.6rem 0.75rem 0.5rem;
+  position: relative;
+  text-align: center;
+  transition: border-color 0.15s;
+}
+.service-node:hover,
+.service-node--selected { border-color: var(--accent); box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 25%, transparent); }
+
+.service-node__delete {
+  background: #fee2e2;
+  border: 1px solid #fca5a5;
+  border-radius: 50%;
+  color: var(--fail);
+  cursor: pointer;
+  font-size: 0.65rem;
+  font-weight: 700;
+  height: 16px;
+  line-height: 16px;
+  opacity: 0;
+  padding: 0;
+  position: absolute;
+  right: 4px;
+  top: 4px;
+  transition: opacity 0.15s;
+  width: 16px;
+}
+.service-node:hover .service-node__delete,
+.react-flow__node-service:hover .service-node__delete { opacity: 1; }
+.service-node__delete:hover { background: var(--fail); border-color: var(--fail); color: #fff; }
+.service-node__icon { font-size: 1.75rem; line-height: 1; }
+.service-node__label { cursor: text; font-size: 0.72rem; font-weight: 600; color: #1e293b; }
+.service-node__label-input {
+  background: var(--base);
+  border: 1px solid var(--accent);
+  border-radius: 0.2rem;
+  color: #1e293b;
+  font-size: 0.72rem;
+  font-weight: 600;
+  outline: none;
+  padding: 0 0.2rem;
+  text-align: center;
+  width: 100%;
+}
+.service-node__category { font-size: 0.62rem; color: #64748b; }
+
+/* Handles visibles en los 4 lados — source y target separados por offset */
+.react-flow__handle {
+  background: var(--accent);
+  border: 2px solid #fff;
+  border-radius: 50%;
+  height: 8px;
+  opacity: 0;
+  transition: opacity 0.15s;
+  width: 8px;
+}
+.react-flow__node:hover .react-flow__handle,
+.react-flow__node-service:hover .react-flow__handle { opacity: 1; }
+
+/* Separa source y target en el mismo lado con offset */
+.react-flow__handle[data-handleid="top-source"]    { left: 60% !important; }
+.react-flow__handle[data-handleid="top-target"]    { left: 40% !important; }
+.react-flow__handle[data-handleid="bottom-source"] { left: 60% !important; }
+.react-flow__handle[data-handleid="bottom-target"] { left: 40% !important; }
+.react-flow__handle[data-handleid="left-source"]   { top: 60% !important; }
+.react-flow__handle[data-handleid="left-target"]   { top: 40% !important; }
+.react-flow__handle[data-handleid="right-source"]  { top: 60% !important; }
+.react-flow__handle[data-handleid="right-target"]  { top: 40% !important; }
+
+.btn--sm { font-size: 0.8rem; padding: 0.35rem 0.75rem; }

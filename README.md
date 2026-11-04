@@ -1,0 +1,200 @@
+# CloudPath ES
+
+**El camino al cloud, en español.**
+
+Cuando estás empezando a prepararte para una certificación cloud, uno de los primeros obstáculos es que casi todo el material está en inglés. Eso puede desalentarte, confundirte, o simplemente hacerte más difícil entender conceptos que de por sí ya son densos. Y encontrar una herramienta de práctica que no solo funcione, sino que de verdad puedas entender — no es tan fácil.
+
+CloudPath ES nació de esa necesidad. La construí pensando en mí, pero espero que también te sirva a ti.
+
+Es una plataforma open source de estudio para certificaciones cloud, completamente en español, que corre en tu propio equipo sin depender de servicios externos de pago.
+
+![CloudPath ES — simulador de arquitecturas con análisis IA](docs/screenshot.png)
+
+---
+
+## Certificaciones que cubre hoy
+
+| Proveedor | Certificación |
+|---|---|
+| ☁️ AWS | Cloud Practitioner (CLF-C02) |
+| 🟡 Google Cloud | Cloud Digital Leader |
+| 🔷 Microsoft Azure | Fundamentals (AZ-900) |
+
+La idea es seguir expandiéndola — más certificaciones, más niveles (Associate, Professional), más servicios, y eventualmente otras áreas técnicas como Python, Terraform, Kubernetes y Docker.
+
+---
+
+## Qué puedes hacer con ella
+
+- **Modo Examen** — simulacro cronometrado de 30 preguntas con resultado final, sesión guardada automáticamente al cerrar
+- **Modo Estudio** — una pregunta a la vez con explicación inmediata y selección adaptativa por dominio
+- **Modo Repaso** — refuerza los dominios donde tienes menor puntaje
+- **Simulador de Arquitecturas** — canvas drag & drop con servicios reales de cada proveedor, conexiones en 4 direcciones
+- **Análisis What If con IA** — Ollama analiza tu diagrama y devuelve costo estimado, riesgos y sugerencias (opcional)
+- **Generación de preguntas con IA** — genera preguntas adicionales bajo demanda para no repetir siempre las mismas (opcional)
+- **130+ preguntas** — AWS, GCP y Azure, incluyendo preguntas multi-respuesta
+- **100% gratuita** — sin cuenta, sin suscripción, sin internet obligatorio
+
+---
+
+## Requisitos del sistema
+
+No necesitas hardware avanzado. Funciona en cualquier equipo moderno.
+
+| Componente | Versión mínima | Notas |
+|---|---|---|
+| Python | 3.12+ | Gratuito — [python.org](https://python.org) |
+| Node.js | 20+ | Gratuito — [nodejs.org](https://nodejs.org) |
+| [uv](https://astral.sh/uv) | cualquiera | Gestor de paquetes Python, se instala solo |
+| RAM (modo normal) | 512 MB | Sin IA local |
+| RAM (con Ollama) | 4 GB recomendado | Solo si activas las funciones de IA |
+| Ollama | cualquiera | Opcional — solo para análisis What If y generación de preguntas |
+| GPU | No requerida | La IA corre en CPU |
+| Sistema operativo | Windows / macOS / Linux | |
+
+---
+
+## Inicio rápido — un solo comando
+
+### Windows (PowerShell)
+
+```powershell
+git clone https://github.com/Gusmal02/cloudpath-es.git
+cd cloudpath-es
+.\setup.ps1
+```
+
+### Linux / macOS
+
+```bash
+git clone https://github.com/Gusmal02/cloudpath-es.git
+cd cloudpath-es
+chmod +x setup.sh && ./setup.sh
+```
+
+El script instala todas las dependencias automáticamente y te indica los siguientes pasos.
+
+### Iniciar la aplicación
+
+**Terminal 1 — Backend:**
+```bash
+cd backend
+python main.py
+```
+
+**Terminal 2 — Frontend:**
+```bash
+cd frontend
+npm run dev
+```
+
+Abre [http://localhost:5173](http://localhost:5173) en tu navegador. Las preguntas se cargan automáticamente — no necesitas pasos adicionales.
+
+### Con Docker
+
+```bash
+docker compose up --build
+```
+
+Abre [http://localhost:3000](http://localhost:3000).
+
+---
+
+## IA Local con Ollama (opcional)
+
+Dos funciones usan IA local: el análisis What If del simulador de arquitecturas y la generación de preguntas adicionales. Ambas son completamente opcionales.
+
+1. Descarga [Ollama](https://ollama.com) e instálalo
+2. Descarga el modelo: `ollama pull llama3.2:3b` (~2 GB, solo la primera vez)
+3. En la app, ve a **Configuración** (ícono ⚙️ en el header) para activar la generación de preguntas
+
+El modelo corre localmente en tu CPU. No envía datos a ningún servidor externo.
+
+---
+
+## Estructura del proyecto
+
+```
+cloudpath-es/
+├── backend/
+│   ├── main.py              # FastAPI app — auto-carga preguntas al iniciar
+│   ├── config.py            # Configuración vía variables de entorno
+│   ├── database/            # SQLite: sesiones, respuestas, progreso por dominio
+│   ├── questions/           # Carga JSON → ChromaDB (RAG), selector adaptativo
+│   ├── exam/                # Lógica de sesión: barajar opciones, resultados
+│   ├── whatif/              # Motor What If: prompt builder, cliente Ollama, parser
+│   └── routers/             # /exam, /study, /progress, /admin, /whatif, /generate
+├── frontend/
+│   └── src/
+│       ├── pages/           # Home, ExamMode, StudyMode, ReviewMode, ArchMode, SettingsMode
+│       ├── components/      # QuestionCard, Timer, ProgressBar, WhatIfPanel, ServiceNode
+│       ├── api/client.ts    # Axios hacia /api/* (proxy Vite → backend)
+│       └── i18n/es.json     # Todas las cadenas en español
+├── backend/data/questions/  # Archivos JSON de preguntas (AWS, GCP, Azure)
+├── docs/
+├── docker-compose.yml
+├── setup.sh                 # Instalación Linux/macOS
+└── setup.ps1                # Instalación Windows
+```
+
+---
+
+## Agregar preguntas manualmente
+
+Crea un archivo `.json` en `backend/data/questions/`:
+
+```json
+[
+  {
+    "id": "unique-id",
+    "question": "¿Pregunta en español?",
+    "options": ["Opción A", "Opción B", "Opción C", "Opción D"],
+    "correct_index": 0,
+    "explanation": "Explicación detallada.",
+    "domain": "Cloud Concepts",
+    "provider": "AWS"
+  }
+]
+```
+
+**Proveedores válidos:** `AWS`, `GCP`, `AZURE`
+
+Reinicia el backend y las preguntas se indexan automáticamente.
+
+---
+
+## Variables de entorno (backend)
+
+| Variable | Default | Descripción |
+|----------|---------|-------------|
+| `CLOUDPATH_DB_PATH` | `data/cloudpath.db` | Base de datos SQLite |
+| `CLOUDPATH_CHROMA_PATH` | `data/chroma` | Directorio ChromaDB |
+| `CLOUDPATH_QUESTIONS_DIR` | `data/questions` | Directorio de preguntas JSON |
+| `OLLAMA_URL` | `http://localhost:11434` | URL de Ollama |
+| `OLLAMA_MODEL` | `llama3.2:3b` | Modelo de Ollama a usar |
+
+---
+
+## Visión del proyecto
+
+CloudPath ES está pensada para crecer. El objetivo es convertirse en la plataforma de referencia en español para preparar certificaciones cloud y tecnología en general — sin barreras de idioma, sin costo, y sin depender de la nube para funcionar.
+
+**Próximas certificaciones planeadas:**
+- AWS Solutions Architect Associate
+- AWS Developer Associate
+- GCP Associate Cloud Engineer
+- Azure Administrator (AZ-104)
+
+**Próximas áreas de expansión:**
+- Python para DevOps
+- Terraform e Infraestructura como Código
+- Kubernetes y Docker
+- Seguridad en la nube
+
+Si quieres contribuir, reportar un error, o proponer una mejora, las contribuciones son bienvenidas.
+
+---
+
+## Licencia
+
+MIT — libre para usar, modificar y distribuir.

@@ -1,0 +1,362 @@
+[
+  {
+    "id": "az-900-concepts-001",
+    "text": "¿Cómo se organiza la jerarquía de recursos en Microsoft Azure?",
+    "options": [
+      "Suscripciones → Grupos de recursos → Recursos",
+      "Tenant → Grupos de gestión → Suscripciones → Grupos de recursos → Recursos",
+      "Recursos → Suscripciones → Tenant",
+      "Azure AD → Suscripciones → Recursos (sin grupos de recursos)"
+    ],
+    "correct_index": 1,
+    "explanation": "La jerarquía completa en Azure es: Tenant de Azure AD (organización) → Grupos de gestión (Management Groups, para políticas a escala) → Suscripciones (unidad de facturación y límite de cuota) → Grupos de recursos (contenedor lógico) → Recursos individuales. Los permisos heredan hacia abajo. Equivale a GCP: Org → Carpetas → Proyectos → Recursos.",
+    "domain": "CLOUD_CONCEPTS",
+    "provider": "AZURE",
+    "difficulty": "medium"
+  },
+  {
+    "id": "az-900-concepts-002",
+    "text": "¿Qué es un grupo de recursos (Resource Group) en Azure?",
+    "options": [
+      "Una suscripción con múltiples usuarios",
+      "Un contenedor lógico que agrupa recursos de Azure relacionados para facilitar su gestión, facturación y control de acceso",
+      "Un tipo especial de red virtual",
+      "Una unidad de facturación independiente"
+    ],
+    "correct_index": 1,
+    "explanation": "Un Resource Group es un contenedor que agrupa recursos relacionados (VMs, bases de datos, redes) de una aplicación. Permite aplicar políticas, permisos y etiquetas a todos los recursos del grupo a la vez. Cuando eliminas un Resource Group, se eliminan todos sus recursos. Es una práctica común tener un RG por aplicación o por entorno (dev/staging/prod).",
+    "domain": "CLOUD_CONCEPTS",
+    "provider": "AZURE",
+    "difficulty": "easy"
+  },
+  {
+    "id": "az-900-concepts-003",
+    "text": "¿Cuál es la diferencia entre una región de Azure y una zona de disponibilidad (Availability Zone)?",
+    "options": [
+      "Son sinónimos en Azure",
+      "Una región es una ubicación geográfica (ej: East US); una zona de disponibilidad son centros de datos físicamente separados dentro de esa región",
+      "Las zonas de disponibilidad son más grandes que las regiones",
+      "Las regiones son solo para almacenamiento; las zonas para cómputo"
+    ],
+    "correct_index": 1,
+    "explanation": "Una región (ej: East US, West Europe) es una ubicación geográfica con múltiples centros de datos. Las Availability Zones son grupos de centros de datos físicamente separados dentro de una región (edificios diferentes, electricidad independiente, red propia). Desplegar recursos en múltiples AZs protege contra fallos de un centro de datos, garantizando al menos 99.99% de disponibilidad.",
+    "domain": "CLOUD_CONCEPTS",
+    "provider": "AZURE",
+    "difficulty": "easy"
+  },
+  {
+    "id": "az-900-concepts-004",
+    "text": "¿Qué modelo de responsabilidad describe quién gestiona el sistema operativo cuando se usa Azure Virtual Machines (IaaS)?",
+    "options": [
+      "Microsoft gestiona el sistema operativo; el cliente gestiona las aplicaciones",
+      "El cliente gestiona el sistema operativo, el middleware y las aplicaciones; Microsoft gestiona la infraestructura física y la virtualización",
+      "Microsoft gestiona todo en IaaS",
+      "El cliente solo gestiona los datos; Microsoft gestiona todo lo demás"
+    ],
+    "correct_index": 1,
+    "explanation": "En IaaS (Azure VMs), Microsoft gestiona el hardware físico, la red física y la capa de virtualización (hypervisor). El cliente gestiona: sistema operativo (parches, actualizaciones), middleware, runtime, aplicaciones y datos. En PaaS (App Service), Microsoft también gestiona el SO. En SaaS (Office 365), Microsoft gestiona prácticamente todo.",
+    "domain": "CLOUD_CONCEPTS",
+    "provider": "AZURE",
+    "difficulty": "easy"
+  },
+  {
+    "id": "az-900-concepts-005",
+    "text": "¿Qué es Azure Arc y para qué sirve?",
+    "options": [
+      "Un servicio de CDN de Azure",
+      "Una solución que extiende la gestión de Azure a servidores y Kubernetes fuera de Azure (on-premises, otras nubes)",
+      "El balanceador de carga global de Azure",
+      "El servicio de DNS de Azure"
+    ],
+    "correct_index": 1,
+    "explanation": "Azure Arc extiende el plano de control de Azure a cualquier infraestructura: servidores físicos, VMs VMware, clusters de Kubernetes en on-premises o en otras nubes. Permite gestionar, aplicar políticas y monitorear recursos no-Azure desde el portal de Azure. Es la respuesta de Microsoft al escenario híbrido y multi-nube. Equivale a AWS Outposts pero con un enfoque de gestión más que de hardware.",
+    "domain": "CLOUD_CONCEPTS",
+    "provider": "AZURE",
+    "difficulty": "hard"
+  },
+  {
+    "id": "az-900-concepts-006",
+    "text": "¿Cuál es la diferencia entre alta disponibilidad y recuperación ante desastres en Azure?",
+    "options": [
+      "Son lo mismo, solo con diferente nombre",
+      "Alta disponibilidad previene interrupciones mediante redundancia (múltiples AZs); recuperación ante desastres restaura servicios tras un desastre usando otra región",
+      "Alta disponibilidad es para bases de datos; recuperación ante desastres es para VMs",
+      "La recuperación ante desastres siempre es automática; la alta disponibilidad requiere configuración manual"
+    ],
+    "correct_index": 1,
+    "explanation": "Alta disponibilidad (HA) minimiza el tiempo de inactividad en la misma región usando múltiples AZs o conjuntos de disponibilidad (Availability Sets). Recuperación ante desastres (DR) es para fallos a nivel de región: replica cargas de trabajo en otra región geográfica con Azure Site Recovery. HA = tiempo de inactividad de minutos; DR = tiempo de inactividad de horas pero sobrevive fallos regionales.",
+    "domain": "CLOUD_CONCEPTS",
+    "provider": "AZURE",
+    "difficulty": "medium"
+  },
+  {
+    "id": "az-900-security-001",
+    "text": "¿Qué servicio de Azure gestiona identidades y accesos, siendo el directorio de usuarios central de la plataforma?",
+    "options": ["Azure Active Directory (Azure AD / Microsoft Entra ID)", "Azure RBAC", "Azure Key Vault", "Azure Policy"],
+    "correct_index": 0,
+    "explanation": "Azure Active Directory (ahora llamado Microsoft Entra ID) es el servicio de identidad en la nube de Microsoft. Gestiona usuarios, grupos y aplicaciones, y permite SSO a miles de aplicaciones SaaS, MFA, acceso condicional y federación con directorios on-premises. RBAC usa las identidades de Azure AD para controlar acceso a recursos de Azure.",
+    "domain": "SECURITY",
+    "provider": "AZURE",
+    "difficulty": "easy"
+  },
+  {
+    "id": "az-900-security-002",
+    "text": "¿Qué es Azure RBAC (Role-Based Access Control) y cómo se diferencia de Azure AD?",
+    "options": [
+      "Azure RBAC gestiona el acceso a los recursos de Azure (VMs, storage, etc.); Azure AD gestiona las identidades (quiénes son los usuarios)",
+      "Son el mismo servicio",
+      "Azure AD gestiona acceso a recursos; Azure RBAC gestiona contraseñas",
+      "Azure RBAC es solo para el portal web; Azure AD es para las APIs"
+    ],
+    "correct_index": 0,
+    "explanation": "Azure AD gestiona identidades: quiénes son los usuarios y cómo se autentican. Azure RBAC usa esas identidades para controlar qué pueden hacer en los recursos de Azure: quién puede leer, escribir o administrar una VM, un grupo de recursos o una suscripción. Los roles de RBAC se asignan a identidades de Azure AD sobre scopes (suscripción, RG o recurso).",
+    "domain": "SECURITY",
+    "provider": "AZURE",
+    "difficulty": "medium"
+  },
+  {
+    "id": "az-900-security-003",
+    "text": "¿Qué servicio de Azure almacena secretos, claves y certificados de forma segura para las aplicaciones?",
+    "options": ["Azure AD Credentials", "Azure Key Vault", "Azure Security Center", "Azure Information Protection"],
+    "correct_index": 1,
+    "explanation": "Azure Key Vault es el almacén seguro de secretos, claves criptográficas y certificados TLS. Las aplicaciones obtienen credenciales de Key Vault en tiempo de ejecución sin almacenarlas en el código. Soporta integración con Managed Identities (sin contraseñas hardcoded) y cumple estándares como FIPS 140-2. Equivale a AWS Secrets Manager + KMS.",
+    "domain": "SECURITY",
+    "provider": "AZURE",
+    "difficulty": "easy"
+  },
+  {
+    "id": "az-900-security-004",
+    "text": "¿Qué servicio de Azure detecta amenazas de seguridad y proporciona recomendaciones para proteger los recursos?",
+    "options": ["Azure Monitor", "Microsoft Defender for Cloud", "Azure Sentinel", "Azure Firewall"],
+    "correct_index": 1,
+    "explanation": "Microsoft Defender for Cloud (antes Azure Security Center) evalúa continuamente la postura de seguridad de los recursos de Azure y multi-nube, detecta amenazas y proporciona recomendaciones priorizadas. Tiene un 'Secure Score' que mide cuánto se han aplicado las mejores prácticas. Azure Sentinel es el SIEM/SOAR para análisis de seguridad avanzado a nivel empresarial.",
+    "domain": "SECURITY",
+    "provider": "AZURE",
+    "difficulty": "medium"
+  },
+  {
+    "id": "az-900-security-005",
+    "text": "¿Qué característica de Azure protege aplicaciones web contra ataques OWASP como inyección SQL y XSS?",
+    "options": ["Azure DDoS Protection", "Azure Web Application Firewall (WAF)", "Network Security Groups (NSG)", "Azure Bastion"],
+    "correct_index": 1,
+    "explanation": "Azure WAF (Web Application Firewall) filtra tráfico HTTP malicioso en la capa 7 de la red, bloqueando ataques OWASP como inyección SQL, XSS y directory traversal. Se integra con Azure Application Gateway, Azure Front Door y Azure CDN. Azure DDoS Protection defiende en las capas 3 y 4, y los NSG son grupos de seguridad a nivel de red/subred.",
+    "domain": "SECURITY",
+    "provider": "AZURE",
+    "difficulty": "medium"
+  },
+  {
+    "id": "az-900-security-006",
+    "text": "¿Qué servicio de Azure registra y analiza operaciones y actividades en la suscripción para auditoría de seguridad?",
+    "options": ["Azure Monitor Metrics", "Azure Activity Log + Microsoft Sentinel", "Azure Advisor", "Azure Service Health"],
+    "correct_index": 1,
+    "explanation": "El Azure Activity Log registra todas las operaciones de gestión en Azure (quién creó, modificó o eliminó qué recurso y cuándo). Microsoft Sentinel es el SIEM cloud-native que ingesta estos logs más otras fuentes para detectar amenazas y responder a incidentes. Equivalen juntos a AWS CloudTrail + AWS Security Hub.",
+    "domain": "SECURITY",
+    "provider": "AZURE",
+    "difficulty": "medium"
+  },
+  {
+    "id": "az-900-security-007",
+    "text": "¿Qué es 'Zero Trust' como modelo de seguridad y cómo lo soporta Azure?",
+    "options": [
+      "Un modelo donde no se confía en ninguna solicitud sin verificarla, independientemente del origen",
+      "Un modelo que confía en todos los usuarios internos de la empresa",
+      "Un servicio específico de Azure para bloquear todo el tráfico externo",
+      "El nombre del firewall perimetral de Azure"
+    ],
+    "correct_index": 0,
+    "explanation": "Zero Trust es un modelo de seguridad que elimina la confianza implícita: cada solicitud se verifica explícitamente (autenticación + autorización + contexto), se usa acceso de mínimo privilegio, y se asume que las brechas son inevitables. Azure lo implementa con Azure AD Conditional Access (verifica identidad, dispositivo y ubicación), Defender for Cloud, y micro-segmentación de redes.",
+    "domain": "SECURITY",
+    "provider": "AZURE",
+    "difficulty": "medium"
+  },
+  {
+    "id": "az-900-tech-001",
+    "text": "¿Qué servicio de Azure es el equivalente a AWS EC2 y GCP Compute Engine para máquinas virtuales?",
+    "options": ["Azure App Service", "Azure Container Instances", "Azure Virtual Machines", "Azure Kubernetes Service"],
+    "correct_index": 2,
+    "explanation": "Azure Virtual Machines es el servicio IaaS de Azure. Ofrece VMs Windows y Linux con control total sobre el sistema operativo. Soporta múltiples series de VM: D-series (propósito general), E-series (memoria optimizada), F-series (cómputo optimizado), N-series (GPU). App Service es PaaS, ACI ejecuta contenedores sin gestionar clusters, y AKS gestiona Kubernetes.",
+    "domain": "TECHNOLOGY",
+    "provider": "AZURE",
+    "difficulty": "easy"
+  },
+  {
+    "id": "az-900-tech-002",
+    "text": "¿Qué servicio de Azure es el equivalente a AWS S3 y GCP Cloud Storage para almacenamiento de objetos?",
+    "options": ["Azure Files", "Azure Disk Storage", "Azure Blob Storage", "Azure Data Lake Storage"],
+    "correct_index": 2,
+    "explanation": "Azure Blob Storage es el almacenamiento de objetos no estructurados de Azure (imágenes, videos, backups, logs). Ofrece capas de acceso: Hot (frecuente), Cool (infrecuente), Cold y Archive. Azure Files ofrece recursos compartidos NFS/SMB, Azure Disk Storage son discos para VMs, y Azure Data Lake Storage Gen2 es Blob optimizado para analytics con sistema de archivos jerárquico.",
+    "domain": "TECHNOLOGY",
+    "provider": "AZURE",
+    "difficulty": "easy"
+  },
+  {
+    "id": "az-900-tech-003",
+    "text": "¿Cuándo usar Azure SQL Database versus Azure Cosmos DB?",
+    "options": [
+      "Azure SQL Database para datos relacionales estructurados; Cosmos DB para datos NoSQL semi-estructurados con distribución global",
+      "Azure SQL Database solo para aplicaciones pequeñas; Cosmos DB para grandes empresas",
+      "Son intercambiables, solo tienen diferente precio",
+      "Cosmos DB es para SQL; Azure SQL Database es para NoSQL"
+    ],
+    "correct_index": 0,
+    "explanation": "Azure SQL Database es el SQL Server relacional administrado en la nube, ideal para datos estructurados con transacciones ACID (facturación, inventario, ERP). Cosmos DB es la base de datos NoSQL multimodelo (documento, clave-valor, grafos, columnar) con distribución global automática y latencia de milisegundos garantizada. Equivale a AWS DynamoDB pero con más modelos de datos.",
+    "domain": "TECHNOLOGY",
+    "provider": "AZURE",
+    "difficulty": "medium"
+  },
+  {
+    "id": "az-900-tech-004",
+    "text": "¿Qué servicio de Azure ejecuta funciones serverless en respuesta a eventos, equivalente a AWS Lambda y GCP Cloud Functions?",
+    "options": ["Azure Logic Apps", "Azure App Service", "Azure Functions", "Azure Event Grid"],
+    "correct_index": 2,
+    "explanation": "Azure Functions es el servicio FaaS de Azure: ejecuta código en respuesta a triggers (HTTP, timer, colas de Service Bus, cambios en Blob Storage, etc.) sin gestionar servidores. Soporta múltiples lenguajes: C#, JavaScript, Python, Java, PowerShell. Azure Logic Apps es un servicio de workflows sin código con conectores a cientos de servicios.",
+    "domain": "TECHNOLOGY",
+    "provider": "AZURE",
+    "difficulty": "easy"
+  },
+  {
+    "id": "az-900-tech-005",
+    "text": "¿Qué servicio de Azure gestiona clusters de Kubernetes, equivalente a AWS EKS y GCP GKE?",
+    "options": ["Azure Container Instances (ACI)", "Azure App Service for Containers", "Azure Kubernetes Service (AKS)", "Azure Container Registry (ACR)"],
+    "correct_index": 2,
+    "explanation": "AKS (Azure Kubernetes Service) es el Kubernetes administrado de Azure. Microsoft gestiona el plano de control (gratis), y el cliente solo paga por los nodos worker. Integra Azure AD, Azure Monitor, ACR para imágenes y Azure Networking. ACI ejecuta contenedores individuales sin cluster (serverless), y ACR es el registro privado de imágenes (equivale a AWS ECR).",
+    "domain": "TECHNOLOGY",
+    "provider": "AZURE",
+    "difficulty": "easy"
+  },
+  {
+    "id": "az-900-tech-006",
+    "text": "¿Qué servicio de Azure conecta a múltiples suscriptores con mensajería de alta escala, equivalente a AWS Kinesis y GCP Pub/Sub?",
+    "options": ["Azure Service Bus", "Azure Queue Storage", "Azure Event Hubs", "Azure Event Grid"],
+    "correct_index": 2,
+    "explanation": "Azure Event Hubs es la plataforma de streaming de big data capaz de ingestar millones de eventos por segundo (logs, telemetría IoT, clicks). Equivale a AWS Kinesis y GCP Pub/Sub. Azure Service Bus es para mensajería empresarial confiable con colas y temas (equivale a AWS SQS/SNS), y Azure Event Grid es el router de eventos para arquitecturas reactivas.",
+    "domain": "TECHNOLOGY",
+    "provider": "AZURE",
+    "difficulty": "medium"
+  },
+  {
+    "id": "az-900-tech-007",
+    "text": "¿Qué servicio de Azure es el equivalente a AWS CloudFormation y GCP Deployment Manager para infraestructura como código?",
+    "options": ["Azure PowerShell", "Azure CLI", "Azure Resource Manager (ARM) Templates / Bicep", "Azure DevOps Pipelines"],
+    "correct_index": 2,
+    "explanation": "Azure Resource Manager (ARM) Templates son archivos JSON que definen la infraestructura de Azure como código. Bicep es el lenguaje de dominio específico de Microsoft que compila a ARM Templates con sintaxis más simple. También es muy común usar Terraform en Azure. Azure DevOps es la plataforma CI/CD, y CLI/PowerShell son herramientas de automatización imperativa.",
+    "domain": "TECHNOLOGY",
+    "provider": "AZURE",
+    "difficulty": "medium"
+  },
+  {
+    "id": "az-900-tech-008",
+    "text": "¿Qué servicio de Azure monitorea la salud, el rendimiento y los logs de aplicaciones e infraestructura?",
+    "options": ["Azure Service Health", "Azure Application Insights", "Azure Monitor", "Microsoft Defender for Cloud"],
+    "correct_index": 2,
+    "explanation": "Azure Monitor es la plataforma de observabilidad central de Azure: recopila métricas, logs y trazas de todos los recursos. Incluye Application Insights (APM para código de aplicación), Log Analytics (consultas sobre logs), y Azure Dashboard. Equivale a Amazon CloudWatch y GCP Cloud Monitoring. Azure Service Health informa sobre el estado de los servicios de Azure.",
+    "domain": "TECHNOLOGY",
+    "provider": "AZURE",
+    "difficulty": "easy"
+  },
+  {
+    "id": "az-900-tech-009",
+    "text": "¿Qué servicio de Azure proporciona acceso seguro y sin contraseña a VMs Azure directamente desde el portal, sin exponer el puerto RDP/SSH a internet?",
+    "options": ["Azure VPN Gateway", "Azure ExpressRoute", "Azure Bastion", "Just-in-Time VM Access"],
+    "correct_index": 2,
+    "explanation": "Azure Bastion es un servicio PaaS que permite conectarse a VMs via RDP/SSH directamente desde el portal de Azure usando HTTPS, sin que las VMs necesiten IP pública ni el puerto RDP/SSH abierto en el firewall. Elimina la exposición de puertos de administración a internet. Just-in-Time VM Access abre puertos temporalmente bajo demanda con aprobación.",
+    "domain": "TECHNOLOGY",
+    "provider": "AZURE",
+    "difficulty": "medium"
+  },
+  {
+    "id": "az-900-aiml-001",
+    "text": "¿Qué servicio de Azure es la plataforma de ML de extremo a extremo equivalente a AWS SageMaker y GCP Vertex AI?",
+    "options": ["Azure Cognitive Services", "Azure Machine Learning", "Azure Databricks", "Azure Synapse Analytics"],
+    "correct_index": 1,
+    "explanation": "Azure Machine Learning es la plataforma MLOps de Azure para construir, entrenar, desplegar y monitorear modelos de ML. Ofrece AutoML (sin código), diseñador visual, notebooks Jupyter administrados, registro de modelos y despliegue como endpoints en tiempo real o batch. Azure Cognitive Services ofrece APIs de IA preentrenadas (visión, lenguaje, voz) sin entrenamiento propio.",
+    "domain": "AI_ML",
+    "provider": "AZURE",
+    "difficulty": "medium"
+  },
+  {
+    "id": "az-900-aiml-002",
+    "text": "¿Qué servicio de Azure proporciona capacidades de IA preentrenadas como reconocimiento de imágenes, traducción y análisis de texto via API, sin necesidad de entrenar modelos?",
+    "options": ["Azure Machine Learning", "Azure Cognitive Services (Azure AI Services)", "Azure Databricks", "Azure OpenAI Service"],
+    "correct_index": 1,
+    "explanation": "Azure Cognitive Services (renombrado Azure AI Services) son APIs de IA listas para usar: Computer Vision (detecta objetos, texto en imágenes), Text Analytics (sentimiento, entidades), Translator, Speech (voz a texto), y Form Recognizer. Se integran con una simple llamada REST. Azure OpenAI Service da acceso a modelos GPT-4 y DALL-E de OpenAI en Azure.",
+    "domain": "AI_ML",
+    "provider": "AZURE",
+    "difficulty": "medium"
+  },
+  {
+    "id": "az-900-billing-001",
+    "text": "¿Qué modelo de precios ofrece Azure para VMs equivalente a las instancias reservadas de AWS?",
+    "options": [
+      "Azure Spot Instances",
+      "Azure Reserved VM Instances",
+      "Azure Pay-as-you-go VMs",
+      "Azure Dedicated Hosts"
+    ],
+    "correct_index": 1,
+    "explanation": "Azure Reserved VM Instances ofrecen hasta 72% de descuento sobre el precio de pago por uso a cambio de comprometerse a usar una cantidad específica de CPU/RAM por 1 o 3 años. Equivalen a las instancias reservadas de AWS y los Committed Use Discounts de GCP. Las Spot Instances tienen mayor descuento pero pueden interrumpirse.",
+    "domain": "BILLING",
+    "provider": "AZURE",
+    "difficulty": "medium"
+  },
+  {
+    "id": "az-900-billing-002",
+    "text": "¿Qué herramienta de Azure permite estimar el costo mensual de una arquitectura antes de implementarla?",
+    "options": ["Azure Cost Management", "Azure Pricing Calculator", "Azure Advisor", "Azure Total Cost of Ownership Calculator"],
+    "correct_index": 1,
+    "explanation": "Azure Pricing Calculator (azure.microsoft.com/pricing/calculator) permite seleccionar servicios, regiones y configuraciones para obtener una estimación del costo mensual. Azure Total Cost of Ownership (TCO) Calculator compara el costo de ejecutar cargas de trabajo on-premises vs en Azure. Azure Cost Management muestra costos reales históricos.",
+    "domain": "BILLING",
+    "provider": "AZURE",
+    "difficulty": "easy"
+  },
+  {
+    "id": "az-900-billing-003",
+    "text": "¿Qué servicio de Azure monitorea el gasto en la nube, crea presupuestos y envía alertas cuando el gasto supera un umbral?",
+    "options": ["Azure Pricing Calculator", "Azure Monitor", "Azure Cost Management + Billing", "Azure Policy"],
+    "correct_index": 2,
+    "explanation": "Azure Cost Management + Billing permite visualizar, analizar y controlar el gasto en Azure. Permite crear presupuestos con alertas por email o Action Groups cuando el gasto real o proyectado supera el umbral. También sugiere optimizaciones y exporta datos a Power BI o Storage para análisis avanzado. Equivale a AWS Cost Explorer + AWS Budgets.",
+    "domain": "BILLING",
+    "provider": "AZURE",
+    "difficulty": "easy"
+  },
+  {
+    "id": "az-900-billing-004",
+    "text": "¿Qué son las Spot VMs de Azure y para qué cargas de trabajo son adecuadas?",
+    "options": [
+      "VMs de alta gama para cargas críticas, con precio premium",
+      "VMs que usan capacidad no utilizada de Azure con descuentos de hasta 90% pero pueden ser desalojadas con 30 segundos de aviso",
+      "VMs con soporte técnico dedicado incluido",
+      "VMs que solo están disponibles durante las horas pico"
+    ],
+    "correct_index": 1,
+    "explanation": "Azure Spot VMs aprovechan la capacidad no utilizada del datacenter con descuentos de hasta 90% sobre el precio bajo demanda. Azure puede desalojarlas con solo 30 segundos de aviso cuando necesita la capacidad. Son ideales para cargas tolerantes a interrupciones: procesamiento batch, renderizado 3D, entrenamiento de ML y pruebas. Equivalen a AWS Spot Instances y GCP Spot VMs.",
+    "domain": "BILLING",
+    "provider": "AZURE",
+    "difficulty": "medium"
+  },
+  {
+    "id": "az-900-billing-005",
+    "text": "¿Cómo funciona la facturación con Azure cuando tienes múltiples suscripciones en una misma empresa?",
+    "options": [
+      "Cada suscripción tiene su propia factura y no se pueden consolidar",
+      "Con Management Groups y una cuenta de facturación Enterprise, puedes consolidar múltiples suscripciones bajo una única factura",
+      "Solo se puede tener una suscripción por empresa",
+      "Las suscripciones no tienen relación entre sí en Azure"
+    ],
+    "correct_index": 1,
+    "explanation": "Con Azure Enterprise Agreement o Microsoft Customer Agreement, múltiples suscripciones pueden asociarse a una sola cuenta de facturación. Los Management Groups permiten aplicar políticas a múltiples suscripciones. Los departamentos y cuentas permiten estructurar el gasto por equipo. Esto equivale a AWS Organizations con facturación consolidada y GCP con una cuenta de facturación para múltiples proyectos.",
+    "domain": "BILLING",
+    "provider": "AZURE",
+    "difficulty": "medium"
+  },
+  {
+    "id": "az-900-billing-006",
+    "text": "¿Qué servicio de Azure proporciona recomendaciones para reducir costos, mejorar seguridad y rendimiento?",
+    "options": ["Azure Monitor", "Azure Policy", "Azure Advisor", "Microsoft Defender for Cloud"],
+    "correct_index": 2,
+    "explanation": "Azure Advisor analiza la configuración de los recursos y proporciona recomendaciones personalizadas en 5 categorías: Costo, Seguridad, Fiabilidad, Excelencia operativa y Rendimiento. Para costos sugiere: redimensionar VMs sobredimensionadas, eliminar recursos huérfanos, o comprar reservas para VMs de uso continuo. Equivale a AWS Trusted Advisor.",
+    "domain": "BILLING",
+    "provider": "AZURE",
+    "difficulty": "easy"
+  }
+]
