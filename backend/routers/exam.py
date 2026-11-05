@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
+import json
 import sqlite3
 from config import get_settings
 from database.sqlite_client import get_db
@@ -9,9 +10,6 @@ from questions.chroma_client import query_questions
 
 router = APIRouter(prefix="/exam", tags=["exam"])
 
-# In-memory store for question correct_index per session (shuffled answers need original)
-_session_questions: dict[str, dict[str, dict]] = {}
-
 
 def _get_db():
     settings = get_settings()
@@ -20,6 +18,31 @@ def _get_db():
         yield db
     finally:
         db.close()
+
+
+def _persist_session_questions(db: sqlite3.Connection, session_id: str, questions: list[dict]) -> None:
+    db.executemany(
+        "INSERT OR REPLACE INTO session_questions (session_id, question_id, correct_indices, domain, provider) VALUES (?, ?, ?, ?, ?)",
+        [
+            (session_id, sq["id"], json.dumps(sq["correct_indices"]), sq["domain"], sq["provider"])
+            for sq in questions
+        ],
+    )
+    db.commit()
+
+
+def _load_question_data(db: sqlite3.Connection, session_id: str, question_id: str) -> dict | None:
+    row = db.execute(
+        "SELECT correct_indices, domain, provider FROM session_questions WHERE session_id = ? AND question_id = ?",
+        (session_id, question_id),
+    ).fetchone()
+    if row is None:
+        return None
+    return {
+        "correct_indices": json.loads(row["correct_indices"]),
+        "domain": row["domain"],
+        "provider": row["provider"],
+    }
 
 
 @router.post("/start")
@@ -35,25 +58,14 @@ def exam_start(req: StartExamRequest, db: sqlite3.Connection = Depends(_get_db))
         raise HTTPException(status_code=404, detail="No questions found for this provider")
 
     result = start_exam(db=db, provider=req.provider, questions=questions)
-    session_id = result["session_id"]
-
-    # Store post-shuffle correct_indices (single or multi-answer)
-    _session_questions[session_id] = {
-        sq["id"]: {
-            "correct_indices": sq["correct_indices"],
-            "domain": sq["domain"],
-            "provider": sq["provider"],
-        }
-        for sq in result["questions"]
-    }
+    _persist_session_questions(db, result["session_id"], result["questions"])
 
     return result
 
 
 @router.post("/answer")
 def exam_answer(req: AnswerRequest, db: sqlite3.Connection = Depends(_get_db)):
-    session_data = _session_questions.get(req.session_id, {})
-    question_data = session_data.get(req.question_id)
+    question_data = _load_question_data(db, req.session_id, req.question_id)
 
     if question_data is None:
         raise HTTPException(status_code=404, detail="Question not found in session")

@@ -82,7 +82,17 @@ def get_result(db: sqlite3.Connection, session_id: str) -> ExamResult:
     total = len(answers)
 
     domain_rows = db.execute(
-        "SELECT domain, correct_count, total_count FROM domain_progress"
+        """
+        SELECT sq.domain,
+               COUNT(*) AS total_count,
+               SUM(ua.is_correct) AS correct_count
+        FROM user_answers ua
+        JOIN session_questions sq
+          ON ua.session_id = sq.session_id AND ua.question_id = sq.question_id
+        WHERE ua.session_id = ?
+        GROUP BY sq.domain
+        """,
+        (session_id,),
     ).fetchall()
 
     by_domain = [

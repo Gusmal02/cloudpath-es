@@ -27,6 +27,16 @@ CREATE TABLE IF NOT EXISTS domain_progress (
     PRIMARY KEY (domain, provider)
 );
 
+CREATE TABLE IF NOT EXISTS session_questions (
+    session_id TEXT NOT NULL,
+    question_id TEXT NOT NULL,
+    correct_indices TEXT NOT NULL,
+    domain TEXT NOT NULL,
+    provider TEXT NOT NULL,
+    PRIMARY KEY (session_id, question_id),
+    FOREIGN KEY (session_id) REFERENCES exam_sessions(id)
+);
+
 CREATE TABLE IF NOT EXISTS architectures (
     id TEXT PRIMARY KEY,
     name TEXT NOT NULL,

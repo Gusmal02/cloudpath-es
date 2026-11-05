@@ -26,14 +26,16 @@ La idea es seguir expandiéndola — más certificaciones, más niveles (Associa
 
 ## Qué puedes hacer con ella
 
-- **Modo Examen** — simulacro cronometrado de 30 preguntas con resultado final, sesión guardada automáticamente al cerrar
+- **Modo Examen** — simulacro cronometrado de 30 preguntas con resultado por dominio, sesión persistida en base de datos (sobrevive reinicios del servidor)
 - **Modo Estudio** — una pregunta a la vez con explicación inmediata y selección adaptativa por dominio
-- **Modo Repaso** — refuerza los dominios donde tienes menor puntaje
+- **Modo Repaso** — refuerza los dominios donde tienes menor puntaje histórico
 - **Simulador de Arquitecturas** — canvas drag & drop con servicios reales de cada proveedor, conexiones en 4 direcciones
 - **Análisis What If con IA** — Ollama analiza tu diagrama y devuelve costo estimado, riesgos y sugerencias (opcional)
-- **Generación de preguntas con IA** — genera preguntas adicionales bajo demanda para no repetir siempre las mismas (opcional)
-- **130+ preguntas** — AWS, GCP y Azure, incluyendo preguntas multi-respuesta
+- **Generación de preguntas con IA** — genera preguntas adicionales bajo demanda; las preguntas generadas no están verificadas oficialmente y pueden contener inexactitudes (opcional)
+- **130+ preguntas verificadas** — AWS, GCP y Azure, incluyendo preguntas multi-respuesta
 - **100% gratuita** — sin cuenta, sin suscripción, sin internet obligatorio
+
+> **Nota sobre el formato de examen:** el simulacro usa 30 preguntas para práctica rápida. Los exámenes oficiales tienen más preguntas (AWS CLF-C02: 65 preguntas, 50 puntuables). Un modo de simulacro completo está planeado en la hoja de ruta.
 
 ---
 
@@ -184,6 +186,11 @@ CloudPath ES está pensada para crecer. El objetivo es convertirse en la platafo
 - AWS Developer Associate
 - GCP Associate Cloud Engineer
 - Azure Administrator (AZ-104)
+
+**Próximas mejoras técnicas:**
+- Modo simulacro completo (65 preguntas, condiciones reales del examen)
+- Validación de preguntas generadas por IA contra material de referencia oficial
+- Cobertura CLF-C02 ajustada a los pesos reales por dominio
 
 **Próximas áreas de expansión:**
 - Python para DevOps
