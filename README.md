@@ -149,7 +149,7 @@ Crea un archivo `.json` en `backend/data/questions/`:
 [
   {
     "id": "unique-id",
-    "question": "¿Pregunta en español?",
+    "text": "¿Pregunta en español?",
     "options": ["Opción A", "Opción B", "Opción C", "Opción D"],
     "correct_index": 0,
     "explanation": "Explicación detallada.",

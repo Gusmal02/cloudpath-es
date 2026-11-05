@@ -50,7 +50,7 @@ def submit_answer(
     provider: str,
 ) -> bool:
     is_correct = set(chosen_indices) == set(correct_indices)
-    chosen_index = chosen_indices[0] if len(chosen_indices) == 1 else chosen_indices[0]
+    chosen_index = chosen_indices[0]
 
     db.execute(
         "INSERT INTO user_answers (id, session_id, question_id, chosen_index, is_correct, answered_at) VALUES (?, ?, ?, ?, ?, ?)",

@@ -89,4 +89,11 @@ def select_exam_set(
         used_ids.extend([q.id for q in results])
 
     random.shuffle(selected)
-    return selected[:n]
+    result = selected[:n]
+    if len(result) < n:
+        import logging
+        logging.getLogger(__name__).warning(
+            "select_exam_set: requested %d questions for provider=%s but only %d available",
+            n, provider, len(result),
+        )
+    return result

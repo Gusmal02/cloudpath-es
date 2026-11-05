@@ -1,5 +1,6 @@
 import { createContext, useContext, useState } from 'react'
 import type { ReactNode } from 'react'
+import type { TutorMessage } from '../api/client'
 
 export interface TutorContextState {
   page: 'exam' | 'study' | 'review' | 'arch' | null
@@ -25,16 +26,23 @@ interface TutorContextValue {
   tutorCtx: TutorContextState
   setTutorContext: (ctx: Partial<TutorContextState>) => void
   clearTutorContext: () => void
+  tutorHistory: TutorMessage[]
+  appendTutorHistory: (msg: TutorMessage) => void
+  clearTutorHistory: () => void
 }
 
 const TutorContext = createContext<TutorContextValue>({
   tutorCtx: defaultState,
   setTutorContext: () => {},
   clearTutorContext: () => {},
+  tutorHistory: [],
+  appendTutorHistory: () => {},
+  clearTutorHistory: () => {},
 })
 
 export function TutorProvider({ children }: { children: ReactNode }) {
   const [tutorCtx, setCtx] = useState<TutorContextState>(defaultState)
+  const [tutorHistory, setTutorHistory] = useState<TutorMessage[]>([])
 
   function setTutorContext(partial: Partial<TutorContextState>) {
     setCtx((prev) => ({ ...prev, ...partial }))
@@ -44,8 +52,16 @@ export function TutorProvider({ children }: { children: ReactNode }) {
     setCtx(defaultState)
   }
 
+  function appendTutorHistory(msg: TutorMessage) {
+    setTutorHistory((prev) => [...prev, msg])
+  }
+
+  function clearTutorHistory() {
+    setTutorHistory([])
+  }
+
   return (
-    <TutorContext.Provider value={{ tutorCtx, setTutorContext, clearTutorContext }}>
+    <TutorContext.Provider value={{ tutorCtx, setTutorContext, clearTutorContext, tutorHistory, appendTutorHistory, clearTutorHistory }}>
       {children}
     </TutorContext.Provider>
   )

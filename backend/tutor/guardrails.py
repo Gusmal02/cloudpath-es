@@ -8,12 +8,25 @@ import re
 MAX_MESSAGE_LENGTH = 500
 
 BLOCKED_PATTERNS = [
+    # Spanish — answer fishing
     r"\b(dame|dime|cu[aá]l es|qu[eé] es)\s+(la\s+)?respuesta\s+correcta\b",
     r"\brespuesta\s+(correcta|es la|es el)\b",
+    # Spanish — prompt injection
     r"\bignora\s+(estas|tus|las)\s+instrucciones\b",
     r"\bact[uú]a como\b",
     r"\bpretende\s+(ser|que eres)\b",
     r"\bolvida\s+(todo|las instrucciones)\b",
+    # English — answer fishing
+    r"\b(tell|give|show)\s+me\s+the\s+(correct\s+)?answer\b",
+    r"\bwhich\s+(option|answer)\s+is\s+correct\b",
+    # English — prompt injection
+    r"\bignore\s+(your\s+)?(previous\s+)?instructions\b",
+    r"\bact\s+as\b",
+    r"\bpretend\s+(you\s+are|to\s+be)\b",
+    r"\bforget\s+(everything|your\s+instructions)\b",
+    r"\byou\s+are\s+now\b",
+    r"\bDAN\b",
+    r"\bjailbreak\b",
 ]
 
 _compiled = [re.compile(p, re.IGNORECASE) for p in BLOCKED_PATTERNS]

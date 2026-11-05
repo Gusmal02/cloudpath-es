@@ -1,3 +1,4 @@
+import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { getDomainProgress, getStudyQuestion, submitStudyAnswer } from '../api/client'
@@ -19,9 +20,11 @@ export function ReviewMode() {
   const [question, setQuestion] = useState<Question | null>(null)
   const [seen, setSeen] = useState<string[]>([])
   const [selected, setSelected] = useState<number | null>(null)
+  const [selectedIndices, setSelectedIndices] = useState<number[]>([])
   const [answered, setAnswered] = useState(false)
   const [isCorrect, setIsCorrect] = useState(false)
   const [error, setError] = useState('')
+  const [exhausted, setExhausted] = useState(false)
 
   useEffect(() => {
     getDomainProgress(provider).then(setProgress).catch(() => {})
@@ -32,15 +35,37 @@ export function ReviewMode() {
   function loadNext(excludeIds: string[]) {
     setQuestion(null)
     setSelected(null)
+    setSelectedIndices([])
     setAnswered(false)
     getStudyQuestion(provider, excludeIds)
       .then(setQuestion)
-      .catch(() => setError(t.error_load))
+      .catch((err) => {
+        if (axios.isAxiosError(err) && err.response?.status === 404) {
+          setExhausted(true)
+        } else {
+          setError(t.error_load)
+        }
+      })
+  }
+
+  function handleSelect(i: number) {
+    if (!question) return
+    const isMulti = (question.num_correct ?? 1) > 1
+    if (isMulti) {
+      setSelectedIndices((prev) =>
+        prev.includes(i) ? prev.filter((x) => x !== i) : [...prev, i]
+      )
+    } else {
+      setSelected(i)
+    }
   }
 
   async function handleConfirm() {
-    if (!question || selected === null) return
-    const fb = await submitStudyAnswer(question.id, selected)
+    if (!question) return
+    const isMulti = (question.num_correct ?? 1) > 1
+    const chosen = isMulti ? selectedIndices : (selected !== null ? [selected] : [])
+    if (chosen.length === 0) return
+    const fb = await submitStudyAnswer(question.id, chosen)
     setIsCorrect(fb.is_correct)
     setAnswered(true)
     setSeen((s) => [...s, question.id])
@@ -53,6 +78,13 @@ export function ReviewMode() {
       <main className="review-mode">
         {error ? (
           <div className="error-msg">{error}</div>
+        ) : exhausted ? (
+          <div className="study-exhausted">
+            <p>🎉 ¡Completaste todas las preguntas disponibles para {provider}!</p>
+            <button className="btn btn--primary" onClick={() => { setSeen([]); setExhausted(false); loadNext([]) }}>
+              Volver a empezar
+            </button>
+          </div>
         ) : (
           <>
             {progress.length > 0 && (
@@ -76,7 +108,8 @@ export function ReviewMode() {
                 <QuestionCard
                   question={question}
                   selectedIndex={selected}
-                  onSelect={setSelected}
+                  selectedIndices={selectedIndices}
+                  onSelect={handleSelect}
                   disabled={answered}
                 />
                 {answered && (
@@ -88,7 +121,9 @@ export function ReviewMode() {
                 )}
                 <div className="exam-actions">
                   {!answered ? (
-                    <button className="btn btn--primary" onClick={handleConfirm} disabled={selected === null}>
+                    <button className="btn btn--primary" onClick={handleConfirm} disabled={
+                      (question.num_correct ?? 1) > 1 ? selectedIndices.length !== question.num_correct : selected === null
+                    }>
                       {t.confirm_answer}
                     </button>
                   ) : (

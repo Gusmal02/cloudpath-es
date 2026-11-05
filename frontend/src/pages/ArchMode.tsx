@@ -36,6 +36,7 @@ function ArchModeInner() {
   const [edges, setEdges, onEdgesChange] = useEdgesState([])
   const { screenToFlowPosition } = useReactFlow()
 
+  const [archName, setArchName] = useState('')
   const [whatIfOpen, setWhatIfOpen] = useState(false)
   const [whatIfResult, setWhatIfResult] = useState<WhatIfResult | null>(null)
   const [whatIfLoading, setWhatIfLoading] = useState(false)
@@ -91,21 +92,23 @@ function ArchModeInner() {
     }
   }
 
+  const [saveLabel, setSaveLabel] = useState('Guardar')
+
   async function handleSave() {
-    const name = (document.getElementById('arch-name') as HTMLInputElement)?.value?.trim()
+    const name = archName.trim()
     if (!name) { alert('Escribe un nombre para el diagrama'); return }
     if (nodes.length === 0) { alert('Agrega al menos un servicio al diagrama'); return }
     await saveArchitecture(name, provider, nodes, edges)
-    const btn = document.getElementById('arch-save-btn') as HTMLButtonElement
-    if (btn) { btn.textContent = 'Guardado ✓'; setTimeout(() => { btn.textContent = 'Guardar' }, 2000) }
+    setSaveLabel('Guardado ✓')
+    setTimeout(() => setSaveLabel('Guardar'), 2000)
   }
 
   return (
     <>
       <AppHeader title="Simulador de Arquitecturas" provider={provider} />
       <div className="arch-toolbar">
-        <input id="arch-name" className="arch-name-input" placeholder="Nombre del diagrama…" defaultValue="" />
-        <button id="arch-save-btn" className="btn btn--primary btn--sm" onClick={handleSave}>Guardar</button>
+        <input className="arch-name-input" placeholder="Nombre del diagrama…" value={archName} onChange={(e) => setArchName(e.target.value)} />
+        <button className="btn btn--primary btn--sm" onClick={handleSave}>{saveLabel}</button>
         <button className="btn btn--ghost btn--sm" onClick={() => navigate(`/arch/gallery?provider=${provider}`)}>
           Mis arquitecturas
         </button>
@@ -140,7 +143,7 @@ function ArchModeInner() {
             result={whatIfResult}
             loading={whatIfLoading}
             error={whatIfError}
-            diagramName={(document.getElementById('arch-name') as HTMLInputElement)?.value ?? ''}
+            diagramName={archName}
             provider={provider}
             onClose={() => setWhatIfOpen(false)}
           />

@@ -12,9 +12,8 @@ function isAiEnabled() {
 }
 
 export function TutorPanel() {
-  const { tutorCtx } = useTutorContext()
+  const { tutorCtx, tutorHistory, appendTutorHistory } = useTutorContext()
   const [open, setOpen] = useState(false)
-  const [messages, setMessages] = useState<TutorMessage[]>([])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const [unavailable, setUnavailable] = useState(false)
@@ -22,7 +21,7 @@ export function TutorPanel() {
 
   useEffect(() => {
     if (bottomRef.current) bottomRef.current.scrollIntoView({ behavior: 'smooth' })
-  }, [messages, loading])
+  }, [tutorHistory, loading])
 
   if (!isAiEnabled() || tutorCtx.page === null) return null
 
@@ -31,7 +30,7 @@ export function TutorPanel() {
     if (!text || loading) return
 
     const userMsg: TutorMessage = { role: 'user', content: text }
-    setMessages((prev) => [...prev, userMsg])
+    appendTutorHistory(userMsg)
     setInput('')
     setLoading(true)
     setUnavailable(false)
@@ -48,18 +47,15 @@ export function TutorPanel() {
           answered: tutorCtx.answered,
           canvas_services: tutorCtx.canvasServices,
         },
-        history: messages.slice(-MAX_HISTORY_SENT),
+        history: tutorHistory.slice(-MAX_HISTORY_SENT),
       })
-      setMessages((prev) => [...prev, { role: 'assistant', content: res.reply }])
+      appendTutorHistory({ role: 'assistant', content: res.reply })
     } catch (err: unknown) {
       const status = (err as { response?: { status?: number } })?.response?.status
       if (status === 503) {
         setUnavailable(true)
       } else {
-        setMessages((prev) => [
-          ...prev,
-          { role: 'assistant', content: 'Ocurrió un error al contactar al tutor. Intenta de nuevo.' },
-        ])
+        appendTutorHistory({ role: 'assistant', content: 'Ocurrió un error al contactar al tutor. Intenta de nuevo.' })
       }
     } finally {
       setLoading(false)
@@ -107,12 +103,12 @@ export function TutorPanel() {
           </div>
 
           <div className="tutor-panel__messages">
-            {messages.length === 0 && (
+            {tutorHistory.length === 0 && (
               <p className="tutor-msg tutor-msg--thinking">
                 Hola, soy tu tutor de certificaciones cloud. Pregúntame cualquier duda sobre los conceptos que estás estudiando.
               </p>
             )}
-            {messages.map((m, i) => (
+            {tutorHistory.map((m, i) => (
               <div key={i} className={`tutor-msg tutor-msg--${m.role}`}>
                 {m.content}
               </div>

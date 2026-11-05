@@ -1,8 +1,13 @@
+import logging
 from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
 from config import get_settings
 from routers import arch, exam, study, progress, admin, whatif, generate, tutor
+
+logger = logging.getLogger(__name__)
 
 
 @asynccontextmanager
@@ -19,12 +24,14 @@ async def lifespan(app: FastAPI):
             for f in files:
                 try:
                     all_questions.extend(load_questions_from_file(str(f)))
-                except Exception:
-                    pass
+                except Exception as exc:
+                    logger.warning("Error cargando preguntas de %s: %s", f, exc)
             if all_questions:
                 embed_questions(all_questions, collection_name="questions", chroma_path=settings.chroma_path)
-    except Exception:
-        pass
+            else:
+                logger.warning("No se cargaron preguntas — el modo examen no funcionará correctamente")
+    except Exception as exc:
+        logger.error("Error en lifespan al cargar preguntas: %s", exc)
     yield
 
 

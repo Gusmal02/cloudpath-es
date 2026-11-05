@@ -6,6 +6,21 @@ No importa HTTP ni Ollama — solo manipula texto.
 from dataclasses import dataclass, field
 from tutor.topics import CERTIFICATIONS
 
+# Maps internal domain keys (from questions JSON) to human-readable names
+_DOMAIN_LABELS: dict[str, str] = {
+    "CLOUD_CONCEPTS": "Cloud Concepts",
+    "SECURITY": "Security and Compliance",
+    "TECHNOLOGY": "Cloud Technology and Services",
+    "BILLING": "Billing, Pricing and Support",
+    "AI_ML": "AI/ML Services (AWS AI Practitioner scope)",
+}
+
+
+def _domain_label(domain: str | None) -> str | None:
+    if domain is None:
+        return None
+    return _DOMAIN_LABELS.get(domain, domain)
+
 
 @dataclass
 class TutorContext:
@@ -76,9 +91,10 @@ def build_system_prompt(ctx: TutorContext) -> str:
             )
 
     elif ctx.page == "review":
+        domain_label = _domain_label(ctx.domain)
         parts.append(
             f"\nEl usuario está en MODO REPASO"
-            + (f" enfocado en el dominio: {ctx.domain}." if ctx.domain else ".")
+            + (f" enfocado en el dominio: {domain_label}." if domain_label else ".")
             + " Ayúdale a reforzar los conceptos de ese dominio."
         )
 

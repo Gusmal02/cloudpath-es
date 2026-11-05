@@ -1,5 +1,6 @@
 import os
 from dataclasses import dataclass, field
+from functools import lru_cache
 from pathlib import Path
 
 # Data lives inside backend/data/ alongside this package
@@ -20,5 +21,6 @@ class Settings:
     ollama_model: str = field(default_factory=lambda: os.environ.get("OLLAMA_MODEL", "llama3.2:3b"))
 
 
+@lru_cache(maxsize=1)
 def get_settings() -> Settings:
     return Settings()

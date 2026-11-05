@@ -1,8 +1,9 @@
+import json
 import sqlite3
 import uuid
 
 from fastapi import APIRouter, Depends, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 
 from config import get_settings
 from database.sqlite_client import get_db
@@ -24,6 +25,15 @@ class ArchIn(BaseModel):
     provider: str
     nodes_json: str = "[]"
     edges_json: str = "[]"
+
+    @field_validator("nodes_json", "edges_json")
+    @classmethod
+    def must_be_valid_json(cls, v: str) -> str:
+        try:
+            json.loads(v)
+        except json.JSONDecodeError as exc:
+            raise ValueError(f"JSON inválido: {exc}") from exc
+        return v
 
 
 @router.post("")

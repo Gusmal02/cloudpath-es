@@ -21,32 +21,35 @@ CERTIFICATIONS: dict[str, dict] = {
     },
     "GCP": {
         "name": "Google Cloud Digital Leader",
+        # Official blueprint: https://cloud.google.com/learn/certification/guides/cloud-digital-leader
         "exam_domains": [
-            "Cloud Concepts",
-            "Data and Storage",
-            "Compute",
-            "Networking",
-            "Security and Compliance",
+            "Digital Transformation with Google Cloud",
+            "Innovating with Data and Google Cloud",
+            "Infrastructure and Application Modernization",
+            "Google Cloud Security and Operations",
+            "Scaling with Google Cloud Operations",
         ],
         "key_services": [
             "Compute Engine", "Cloud Storage", "BigQuery", "Cloud SQL",
             "Cloud Functions", "GKE", "Pub/Sub", "Cloud CDN",
             "Cloud IAM", "VPC", "Cloud Monitoring", "Cloud Logging",
+            "Looker", "Vertex AI", "Cloud Spanner", "Cloud Run",
         ],
     },
     "AZURE": {
         "name": "Microsoft Azure Fundamentals (AZ-900)",
+        # Official blueprint: https://learn.microsoft.com/en-us/credentials/certifications/azure-fundamentals/
         "exam_domains": [
             "Cloud Concepts",
-            "Azure Core Services",
-            "Security and Compliance",
-            "Pricing and Support",
+            "Azure Architecture and Services",
+            "Azure Management and Governance",
         ],
         "key_services": [
             "Virtual Machines", "Blob Storage", "Azure SQL Database",
             "Azure Functions", "Azure Kubernetes Service", "Azure CDN",
-            "Azure Active Directory", "Virtual Network", "Azure Monitor",
+            "Microsoft Entra ID", "Virtual Network", "Azure Monitor",
             "Service Bus", "Cosmos DB", "Azure DevOps",
+            "Azure Resource Manager", "Azure Policy", "Cost Management",
         ],
     },
 }

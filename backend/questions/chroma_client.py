@@ -1,3 +1,5 @@
+import json
+
 import chromadb
 from chromadb.utils import embedding_functions
 from questions.models import Question
@@ -35,10 +37,37 @@ def embed_questions(
                 "difficulty": q.difficulty,
                 "options": "|".join(q.options),
                 "correct_index": q.correct_index,
+                "correct_indices": json.dumps(q.all_correct_indices),
                 "explanation": q.explanation,
             }
             for q in new_questions
         ],
+    )
+
+
+def get_question_by_id(
+    question_id: str,
+    collection_name: str,
+    chroma_path: str,
+) -> Question | None:
+    collection = _get_collection(collection_name, chroma_path)
+    result = collection.get(ids=[question_id])
+    if not result["ids"]:
+        return None
+    meta = result["metadatas"][0]
+    text = result["documents"][0]
+    raw_indices = meta.get("correct_indices")
+    correct_indices = json.loads(raw_indices) if raw_indices else None
+    return Question(
+        id=question_id,
+        text=text,
+        options=meta["options"].split("|"),
+        correct_index=int(meta["correct_index"]),
+        correct_indices=correct_indices,
+        explanation=meta["explanation"],
+        domain=meta["domain"],
+        provider=meta["provider"],
+        difficulty=meta["difficulty"],
     )
 
 
@@ -64,12 +93,15 @@ def query_questions(
             continue
         meta = results["metadatas"][i]
         text = results["documents"][i]
+        raw_indices = meta.get("correct_indices")
+        correct_indices = json.loads(raw_indices) if raw_indices else None
         questions.append(
             Question(
                 id=qid,
                 text=text,
                 options=meta["options"].split("|"),
                 correct_index=int(meta["correct_index"]),
+                correct_indices=correct_indices,
                 explanation=meta["explanation"],
                 domain=domain,
                 provider=meta["provider"],

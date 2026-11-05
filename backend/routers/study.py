@@ -1,15 +1,14 @@
-from fastapi import APIRouter, Depends, HTTPException, Query
 import sqlite3
+
+from fastapi import APIRouter, Depends, HTTPException, Query
+
 from config import get_settings
 from database.sqlite_client import get_db
 from exam.models import StudyAnswerRequest
-from questions.models import Question
+from questions.chroma_client import get_question_by_id
 from questions.selector import select_question
-from questions.chroma_client import query_questions
 
 router = APIRouter(prefix="/study", tags=["study"])
-
-_study_questions: dict[str, Question] = {}
 
 
 def _get_db():
@@ -37,13 +36,17 @@ def study_question(
     if question is None:
         raise HTTPException(status_code=404, detail="No questions available")
 
-    _study_questions[question.id] = question
     return question
 
 
 @router.post("/answer")
 def study_answer(req: StudyAnswerRequest):
-    question = _study_questions.get(req.question_id)
+    settings = get_settings()
+    question = get_question_by_id(
+        question_id=req.question_id,
+        collection_name="questions",
+        chroma_path=settings.chroma_path,
+    )
     if question is None:
         raise HTTPException(status_code=404, detail="Question not found")
 

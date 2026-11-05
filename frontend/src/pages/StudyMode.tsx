@@ -1,3 +1,4 @@
+import axios from 'axios'
 import { useCallback, useEffect, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { getStudyQuestion, submitStudyAnswer } from '../api/client'
@@ -19,6 +20,7 @@ export function StudyMode() {
   const [answered, setAnswered] = useState(false)
   const [isCorrect, setIsCorrect] = useState(false)
   const [error, setError] = useState('')
+  const [exhausted, setExhausted] = useState(false)
 
   const loadNext = useCallback(
     (excludeIds: string[]) => {
@@ -28,7 +30,13 @@ export function StudyMode() {
       setAnswered(false)
       getStudyQuestion(provider, excludeIds)
         .then(setQuestion)
-        .catch(() => setError(t.error_load))
+        .catch((err) => {
+          if (axios.isAxiosError(err) && err.response?.status === 404) {
+            setExhausted(true)
+          } else {
+            setError(t.error_load)
+          }
+        })
     },
     [provider],
   )
@@ -77,6 +85,13 @@ export function StudyMode() {
       <main className="study-mode">
         {error ? (
           <div className="error-msg">{error}</div>
+        ) : exhausted ? (
+          <div className="study-exhausted">
+            <p>🎉 ¡Completaste todas las preguntas disponibles para {provider}!</p>
+            <button className="btn btn--primary" onClick={() => { setSeen([]); setExhausted(false); loadNext([]) }}>
+              Volver a empezar
+            </button>
+          </div>
         ) : !question ? (
           <div className="loading">{t.loading}</div>
         ) : (
