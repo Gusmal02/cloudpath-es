@@ -7,6 +7,7 @@ import { ProgressBar } from '../components/ProgressBar'
 import { QuestionCard } from '../components/QuestionCard'
 import { ResultSummary } from '../components/ResultSummary'
 import { Timer } from '../components/Timer'
+import { useTutorContext } from '../context/TutorContext'
 import type { ExamResult, ExamSession, Provider } from '../types/exam'
 import t from '../i18n/es.json'
 
@@ -48,6 +49,7 @@ export function ExamMode() {
   const [params] = useSearchParams()
   const provider = (params.get('provider') ?? 'AWS') as Provider
   const navigate = useNavigate()
+  const { setTutorContext } = useTutorContext()
 
   const [session, setSession] = useState<ExamSession | null>(null)
   const [currentIdx, setCurrentIdx] = useState(0)
@@ -164,6 +166,20 @@ export function ExamMode() {
   }
 
   const question = session.questions[currentIdx]
+
+  // Publica contexto para el tutor — solo cuando cambia la pregunta, nunca en tick del timer
+  useEffect(() => {
+    if (!session) return
+    const q = session.questions[currentIdx]
+    setTutorContext({
+      page: 'exam',
+      provider,
+      domain: q?.domain ?? null,
+      questionText: q?.text ?? null,
+      questionOptions: q?.options ?? [],
+      answered,
+    })
+  }, [currentIdx, answered, session]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <>

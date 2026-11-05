@@ -4,6 +4,7 @@ import { getDomainProgress, getStudyQuestion, submitStudyAnswer } from '../api/c
 import { AppHeader } from '../components/AppHeader'
 import { ExplanationPanel } from '../components/ExplanationPanel'
 import { QuestionCard } from '../components/QuestionCard'
+import { useTutorContext } from '../context/TutorContext'
 import type { DomainProgress, Provider, Question } from '../types/exam'
 import t from '../i18n/es.json'
 
@@ -12,6 +13,7 @@ const domainNames = t.domains as Record<string, string>
 export function ReviewMode() {
   const [params] = useSearchParams()
   const provider = (params.get('provider') ?? 'AWS') as Provider
+  const { setTutorContext } = useTutorContext()
 
   const [progress, setProgress] = useState<DomainProgress[]>([])
   const [question, setQuestion] = useState<Question | null>(null)
@@ -24,7 +26,8 @@ export function ReviewMode() {
   useEffect(() => {
     getDomainProgress(provider).then(setProgress).catch(() => {})
     loadNext([])
-  }, [provider])
+    setTutorContext({ page: 'review', provider, answered: false })
+  }, [provider]) // eslint-disable-line react-hooks/exhaustive-deps
 
   function loadNext(excludeIds: string[]) {
     setQuestion(null)

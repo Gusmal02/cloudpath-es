@@ -4,12 +4,14 @@ import { getStudyQuestion, submitStudyAnswer } from '../api/client'
 import { AppHeader } from '../components/AppHeader'
 import { ExplanationPanel } from '../components/ExplanationPanel'
 import { QuestionCard } from '../components/QuestionCard'
+import { useTutorContext } from '../context/TutorContext'
 import type { Provider, Question } from '../types/exam'
 import t from '../i18n/es.json'
 
 export function StudyMode() {
   const [params] = useSearchParams()
   const provider = (params.get('provider') ?? 'AWS') as Provider
+  const { setTutorContext } = useTutorContext()
   const [question, setQuestion] = useState<Question | null>(null)
   const [seen, setSeen] = useState<string[]>([])
   const [selected, setSelected] = useState<number | null>(null)
@@ -34,6 +36,17 @@ export function StudyMode() {
   useEffect(() => {
     loadNext([])
   }, [loadNext])
+
+  useEffect(() => {
+    setTutorContext({
+      page: 'study',
+      provider,
+      domain: question?.domain ?? null,
+      questionText: question?.text ?? null,
+      questionOptions: question?.options ?? [],
+      answered,
+    })
+  }, [question?.id, answered]) // eslint-disable-line react-hooks/exhaustive-deps
 
   function handleSelect(i: number) {
     if (!question) return

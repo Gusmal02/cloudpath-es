@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getDomainProgress } from '../api/client'
+import { useTutorContext } from '../context/TutorContext'
 import type { DomainProgress, ExamMode, Provider } from '../types/exam'
 import t from '../i18n/es.json'
 
@@ -55,6 +56,11 @@ export function Home() {
   const [provider, setProvider] = useState<Provider>('AWS')
   const [progress, setProgress] = useState<DomainProgress[]>([])
   const navigate = useNavigate()
+  const { setTutorContext } = useTutorContext()
+
+  useEffect(() => {
+    setTutorContext({ page: null })
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     getDomainProgress(provider)

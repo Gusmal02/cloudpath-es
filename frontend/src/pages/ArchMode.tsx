@@ -18,6 +18,7 @@ import { AppHeader } from '../components/AppHeader'
 import { ServiceNode } from '../components/arch/ServiceNode'
 import { ServicePalette } from '../components/arch/ServicePalette'
 import { WhatIfPanel } from '../components/arch/WhatIfPanel'
+import { useTutorContext } from '../context/TutorContext'
 import type { CloudService } from '../data/cloudServices'
 import type { Provider } from '../types/exam'
 import './ArchMode.css'
@@ -29,6 +30,7 @@ function ArchModeInner() {
   const provider = (params.get('provider') ?? 'AWS') as Provider
   const archId = params.get('id')
   const navigate = useNavigate()
+  const { setTutorContext } = useTutorContext()
 
   const [nodes, setNodes, onNodesChange] = useNodesState([])
   const [edges, setEdges, onEdgesChange] = useEdgesState([])
@@ -52,6 +54,11 @@ function ArchModeInner() {
     (params: Parameters<typeof addEdge>[0]) => setEdges((eds) => addEdge(params, eds)),
     [setEdges],
   )
+
+  useEffect(() => {
+    const serviceNames = nodes.map((n) => (n.data as { label?: string })?.label ?? '').filter(Boolean)
+    setTutorContext({ page: 'arch', provider, canvasServices: serviceNames, answered: true })
+  }, [nodes]) // eslint-disable-line react-hooks/exhaustive-deps
 
   function handleAddService(svc: CloudService) {
     const position = screenToFlowPosition({ x: window.innerWidth / 2, y: window.innerHeight / 2 })

@@ -125,6 +125,36 @@ export interface GeneratedQuestion {
   ai_generated: boolean
 }
 
+export interface TutorMessage {
+  role: 'user' | 'assistant'
+  content: string
+}
+
+export interface TutorChatRequest {
+  message: string
+  context: {
+    page: string | null
+    provider: string | null
+    domain: string | null
+    question_text: string | null
+    question_options: string[]
+    answered: boolean
+    canvas_services: string[]
+  }
+  history: TutorMessage[]
+}
+
+export interface TutorChatResponse {
+  reply: string
+  blocked: boolean
+  block_reason: string | null
+}
+
+export async function chatWithTutor(req: TutorChatRequest): Promise<TutorChatResponse> {
+  const res = await http.post('/tutor/chat', req)
+  return res.data
+}
+
 export async function generateQuestions(
   provider: string,
   domain: string | null,

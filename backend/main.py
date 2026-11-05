@@ -2,7 +2,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from config import get_settings
-from routers import arch, exam, study, progress, admin, whatif, generate
+from routers import arch, exam, study, progress, admin, whatif, generate, tutor
 
 
 @asynccontextmanager
@@ -44,6 +44,7 @@ app.include_router(admin.router)
 app.include_router(arch.router)
 app.include_router(whatif.router)
 app.include_router(generate.router)
+app.include_router(tutor.router)
 
 
 @app.get("/health")
