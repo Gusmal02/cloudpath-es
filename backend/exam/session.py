@@ -10,6 +10,26 @@ def _now() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
+def update_domain_progress(
+    db: sqlite3.Connection,
+    domain: str,
+    provider: str,
+    is_correct: bool,
+) -> None:
+    db.execute(
+        """
+        INSERT INTO domain_progress (domain, provider, correct_count, total_count, last_updated)
+        VALUES (?, ?, ?, 1, ?)
+        ON CONFLICT(domain, provider) DO UPDATE SET
+            correct_count = correct_count + ?,
+            total_count = total_count + 1,
+            last_updated = ?
+        """,
+        (domain, provider, int(is_correct), _now(), int(is_correct), _now()),
+    )
+    db.commit()
+
+
 def start_exam(db: sqlite3.Connection, provider: str, questions: list[Question]) -> dict:
     session_id = str(uuid.uuid4())
     db.execute(
@@ -58,6 +78,7 @@ def update_domain_progress(
         """,
         (domain, provider, int(is_correct), _now(), int(is_correct), _now()),
     )
+    db.commit()
 
 
 def submit_answer(
@@ -78,7 +99,6 @@ def submit_answer(
     )
 
     update_domain_progress(db, domain, provider, is_correct)
-    db.commit()
     return is_correct
 
 

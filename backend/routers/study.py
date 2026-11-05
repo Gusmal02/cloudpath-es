@@ -59,7 +59,6 @@ def study_answer(req: StudyAnswerRequest, db: sqlite3.Connection = Depends(_get_
 
     is_correct = set(chosen) == set(question.all_correct_indices)
     update_domain_progress(db, question.domain, question.provider, is_correct)
-    db.commit()
     return {
         "is_correct": is_correct,
         "correct_indices": question.all_correct_indices,
