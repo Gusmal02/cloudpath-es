@@ -76,6 +76,8 @@ def exam_answer(req: AnswerRequest, db: sqlite3.Connection = Depends(_get_db)):
     elif req.chosen_index is not None:
         chosen = [req.chosen_index]
     else:
+        chosen = None
+    if not chosen:
         raise HTTPException(status_code=422, detail="chosen_index or chosen_indices required")
 
     is_correct = submit_answer(

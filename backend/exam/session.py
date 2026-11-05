@@ -40,6 +40,26 @@ def start_exam(db: sqlite3.Connection, provider: str, questions: list[Question])
     return {"session_id": session_id, "questions": shuffled_questions}
 
 
+def update_domain_progress(
+    db: sqlite3.Connection,
+    domain: str,
+    provider: str,
+    is_correct: bool,
+) -> None:
+    """Actualiza la tabla domain_progress. Puede llamarse desde examen y desde estudio."""
+    db.execute(
+        """
+        INSERT INTO domain_progress (domain, provider, correct_count, total_count, last_updated)
+        VALUES (?, ?, ?, 1, ?)
+        ON CONFLICT(domain, provider) DO UPDATE SET
+            correct_count = correct_count + ?,
+            total_count = total_count + 1,
+            last_updated = ?
+        """,
+        (domain, provider, int(is_correct), _now(), int(is_correct), _now()),
+    )
+
+
 def submit_answer(
     db: sqlite3.Connection,
     session_id: str,
@@ -57,17 +77,7 @@ def submit_answer(
         (str(uuid.uuid4()), session_id, question_id, chosen_index, int(is_correct), _now()),
     )
 
-    db.execute(
-        """
-        INSERT INTO domain_progress (domain, provider, correct_count, total_count, last_updated)
-        VALUES (?, ?, ?, 1, ?)
-        ON CONFLICT(domain, provider) DO UPDATE SET
-            correct_count = correct_count + ?,
-            total_count = total_count + 1,
-            last_updated = ?
-        """,
-        (domain, provider, int(is_correct), _now(), int(is_correct), _now()),
-    )
+    update_domain_progress(db, domain, provider, is_correct)
     db.commit()
     return is_correct
 

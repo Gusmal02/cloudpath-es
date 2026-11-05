@@ -5,6 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from config import get_settings
 from database.sqlite_client import get_db
 from exam.models import StudyAnswerRequest
+from exam.session import update_domain_progress
 from questions.chroma_client import get_question_by_id
 from questions.selector import select_question
 
@@ -40,7 +41,7 @@ def study_question(
 
 
 @router.post("/answer")
-def study_answer(req: StudyAnswerRequest):
+def study_answer(req: StudyAnswerRequest, db: sqlite3.Connection = Depends(_get_db)):
     settings = get_settings()
     question = get_question_by_id(
         question_id=req.question_id,
@@ -53,10 +54,12 @@ def study_answer(req: StudyAnswerRequest):
     chosen = req.chosen_indices if req.chosen_indices is not None else (
         [req.chosen_index] if req.chosen_index is not None else None
     )
-    if chosen is None:
+    if not chosen:
         raise HTTPException(status_code=422, detail="chosen_index or chosen_indices required")
 
     is_correct = set(chosen) == set(question.all_correct_indices)
+    update_domain_progress(db, question.domain, question.provider, is_correct)
+    db.commit()
     return {
         "is_correct": is_correct,
         "correct_indices": question.all_correct_indices,

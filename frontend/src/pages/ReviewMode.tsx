@@ -14,7 +14,7 @@ const domainNames = t.domains as Record<string, string>
 export function ReviewMode() {
   const [params] = useSearchParams()
   const provider = (params.get('provider') ?? 'AWS') as Provider
-  const { setTutorContext } = useTutorContext()
+  const { setTutorContext, clearTutorHistory } = useTutorContext()
 
   const [progress, setProgress] = useState<DomainProgress[]>([])
   const [question, setQuestion] = useState<Question | null>(null)
@@ -27,6 +27,7 @@ export function ReviewMode() {
   const [exhausted, setExhausted] = useState(false)
 
   useEffect(() => {
+    clearTutorHistory()
     getDomainProgress(provider).then(setProgress).catch(() => {})
     loadNext([])
     setTutorContext({ page: 'review', provider, answered: false })
@@ -116,7 +117,7 @@ export function ReviewMode() {
                   <ExplanationPanel
                     isCorrect={isCorrect}
                     explanation={question.explanation}
-                    correctOption={question.options[question.correct_index]}
+                    correctOptions={(question.correct_indices ?? [question.correct_index]).map((i: number) => question.options[i])}
                   />
                 )}
                 <div className="exam-actions">

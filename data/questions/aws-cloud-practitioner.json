@@ -1,0 +1,352 @@
+[
+  {
+    "id": "aws-cp-tech-001",
+    "text": "Una empresa de retail necesita almacenar millones de imágenes de productos con acceso global y bajo costo. ¿Qué servicio de AWS elegirías?",
+    "options": ["Amazon EBS", "Amazon S3", "Amazon EFS", "Amazon RDS"],
+    "correct_index": 1,
+    "explanation": "Amazon S3 es el servicio de almacenamiento de objetos de AWS. Es ideal para archivos estáticos porque ofrece alta durabilidad (99.999999999%), acceso global, y precios bajos por GB almacenado. EBS es almacenamiento en bloque para EC2, EFS es sistema de archivos compartido, y RDS es base de datos relacional.",
+    "domain": "TECHNOLOGY",
+    "provider": "AWS",
+    "difficulty": "easy"
+  },
+  {
+    "id": "aws-cp-tech-002",
+    "text": "Una startup necesita ejecutar una aplicación web sin gestionar servidores. El tráfico es impredecible. ¿Qué combinación de servicios es más adecuada?",
+    "options": [
+      "EC2 + RDS",
+      "Lambda + API Gateway + DynamoDB",
+      "EC2 Auto Scaling + S3",
+      "ECS + ElastiCache"
+    ],
+    "correct_index": 1,
+    "explanation": "Lambda + API Gateway + DynamoDB es una arquitectura serverless. Lambda ejecuta código sin servidores, API Gateway expone endpoints HTTP, y DynamoDB es una base de datos NoSQL serverless. Esta combinación escala automáticamente con el tráfico y se paga solo por uso.",
+    "domain": "TECHNOLOGY",
+    "provider": "AWS",
+    "difficulty": "medium"
+  },
+  {
+    "id": "aws-cp-tech-003",
+    "text": "Una empresa necesita una base de datos relacional administrada para su sistema de inventario. ¿Cuál es la opción más adecuada en AWS?",
+    "options": ["Amazon DynamoDB", "Amazon Redshift", "Amazon RDS", "Amazon ElastiCache"],
+    "correct_index": 2,
+    "explanation": "Amazon RDS (Relational Database Service) es el servicio de base de datos relacional administrada de AWS. Soporta MySQL, PostgreSQL, Oracle, SQL Server y MariaDB. AWS gestiona parches, backups y alta disponibilidad.",
+    "domain": "TECHNOLOGY",
+    "provider": "AWS",
+    "difficulty": "easy"
+  },
+  {
+    "id": "aws-cp-tech-004",
+    "text": "Una plataforma de streaming necesita reducir la latencia para usuarios en Asia mientras el origen está en EE.UU. ¿Qué servicio de AWS ayuda con esto?",
+    "options": ["AWS Direct Connect", "Amazon CloudFront", "Amazon Route 53", "AWS Global Accelerator"],
+    "correct_index": 1,
+    "explanation": "Amazon CloudFront es el CDN (Content Delivery Network) de AWS. Distribuye contenido desde edge locations cercanas al usuario final, reduciendo la latencia. Es ideal para contenido estático y streaming de video.",
+    "domain": "TECHNOLOGY",
+    "provider": "AWS",
+    "difficulty": "medium"
+  },
+  {
+    "id": "aws-cp-tech-005",
+    "text": "Una empresa necesita enviar notificaciones push a millones de dispositivos móviles. ¿Qué servicio de AWS usarías?",
+    "options": ["Amazon SES", "Amazon SNS", "Amazon SQS", "Amazon Pinpoint"],
+    "correct_index": 1,
+    "explanation": "Amazon SNS (Simple Notification Service) permite enviar notificaciones push a dispositivos móviles, correos electrónicos, SMS y otros endpoints. Soporta millones de suscriptores y entrega en tiempo real.",
+    "domain": "TECHNOLOGY",
+    "provider": "AWS",
+    "difficulty": "medium"
+  },
+  {
+    "id": "aws-cp-tech-006",
+    "text": "Una aplicación necesita procesar mensajes de forma asíncrona para desacoplar componentes. ¿Qué servicio es más adecuado?",
+    "options": ["Amazon SNS", "Amazon SQS", "Amazon Kinesis", "AWS Step Functions"],
+    "correct_index": 1,
+    "explanation": "Amazon SQS (Simple Queue Service) es un servicio de colas de mensajes que desacopla componentes de una aplicación. Los mensajes se almacenan hasta que el consumidor los procesa, garantizando que no se pierdan.",
+    "domain": "TECHNOLOGY",
+    "provider": "AWS",
+    "difficulty": "medium"
+  },
+  {
+    "id": "aws-cp-security-001",
+    "text": "¿Qué servicio de AWS permite gestionar permisos y controlar el acceso a recursos de la nube?",
+    "options": ["Amazon Inspector", "AWS IAM", "AWS Shield", "Amazon GuardDuty"],
+    "correct_index": 1,
+    "explanation": "AWS IAM (Identity and Access Management) permite crear usuarios, grupos y roles, y asignar políticas que controlan qué acciones pueden realizar sobre qué recursos de AWS.",
+    "domain": "SECURITY",
+    "provider": "AWS",
+    "difficulty": "easy"
+  },
+  {
+    "id": "aws-cp-security-002",
+    "text": "Una empresa quiere proteger su aplicación web de ataques DDoS y SQL injection. ¿Qué servicio de AWS es más adecuado?",
+    "options": ["AWS Shield Standard", "AWS WAF + AWS Shield", "Amazon GuardDuty", "AWS Inspector"],
+    "correct_index": 1,
+    "explanation": "AWS WAF (Web Application Firewall) protege contra ataques de capa 7 como SQL injection y XSS. AWS Shield protege contra DDoS. Usados juntos ofrecen protección completa para aplicaciones web.",
+    "domain": "SECURITY",
+    "provider": "AWS",
+    "difficulty": "medium"
+  },
+  {
+    "id": "aws-cp-security-003",
+    "text": "¿Cuál es la mejor práctica al crear una cuenta de AWS para el usuario root?",
+    "options": [
+      "Usar el usuario root para todas las operaciones diarias",
+      "Compartir las credenciales root con el equipo",
+      "Activar MFA y no usar el root para tareas diarias",
+      "Crear claves de acceso root para automatización"
+    ],
+    "correct_index": 2,
+    "explanation": "El usuario root tiene acceso total a la cuenta. La mejor práctica es activar MFA (autenticación multifactor) y crear usuarios IAM para las tareas diarias. Las credenciales root no deben compartirse ni usarse para automatización.",
+    "domain": "SECURITY",
+    "provider": "AWS",
+    "difficulty": "easy"
+  },
+  {
+    "id": "aws-cp-security-004",
+    "text": "Una empresa necesita detectar actividad sospechosa en su cuenta de AWS de forma automática. ¿Qué servicio usarías?",
+    "options": ["AWS CloudTrail", "Amazon GuardDuty", "AWS Config", "Amazon Inspector"],
+    "correct_index": 1,
+    "explanation": "Amazon GuardDuty es un servicio de detección de amenazas que analiza continuamente logs de CloudTrail, VPC Flow Logs y DNS para identificar comportamientos maliciosos o no autorizados.",
+    "domain": "SECURITY",
+    "provider": "AWS",
+    "difficulty": "medium"
+  },
+  {
+    "id": "aws-cp-security-005",
+    "text": "¿Qué servicio de AWS permite almacenar y rotar automáticamente credenciales de base de datos?",
+    "options": ["AWS IAM", "AWS KMS", "AWS Secrets Manager", "AWS Systems Manager Parameter Store"],
+    "correct_index": 2,
+    "explanation": "AWS Secrets Manager almacena, gestiona y rota automáticamente credenciales como contraseñas de base de datos, claves API y otros secretos. Reduce el riesgo de credenciales hardcodeadas en el código.",
+    "domain": "SECURITY",
+    "provider": "AWS",
+    "difficulty": "medium"
+  },
+  {
+    "id": "aws-cp-billing-001",
+    "text": "¿Qué herramienta de AWS permite estimar el costo mensual de una arquitectura antes de implementarla?",
+    "options": ["AWS Cost Explorer", "AWS Pricing Calculator", "AWS Budgets", "AWS Trusted Advisor"],
+    "correct_index": 1,
+    "explanation": "AWS Pricing Calculator (calculator.aws) permite modelar arquitecturas y estimar costos antes de implementar. Es útil para comparar opciones y planificar presupuestos.",
+    "domain": "BILLING",
+    "provider": "AWS",
+    "difficulty": "easy"
+  },
+  {
+    "id": "aws-cp-billing-002",
+    "text": "Una empresa quiere recibir alertas cuando su gasto en AWS supere cierto límite. ¿Qué servicio usa?",
+    "options": ["AWS Cost Explorer", "AWS Budgets", "AWS Pricing Calculator", "AWS Cost and Usage Report"],
+    "correct_index": 1,
+    "explanation": "AWS Budgets permite configurar alertas que se envían por email o SNS cuando el gasto real o proyectado supera un umbral definido. Es la herramienta para control proactivo de costos.",
+    "domain": "BILLING",
+    "provider": "AWS",
+    "difficulty": "easy"
+  },
+  {
+    "id": "aws-cp-billing-003",
+    "text": "Una startup quiere reducir costos en instancias EC2 que corren 24/7 para producción a largo plazo. ¿Qué modelo de precios conviene?",
+    "options": [
+      "On-Demand",
+      "Spot Instances",
+      "Reserved Instances o Savings Plans",
+      "Dedicated Hosts"
+    ],
+    "correct_index": 2,
+    "explanation": "Reserved Instances o Savings Plans ofrecen descuentos de hasta 72% a cambio de un compromiso de uso de 1 o 3 años. Son ideales para cargas de trabajo predecibles y continuas como producción.",
+    "domain": "BILLING",
+    "provider": "AWS",
+    "difficulty": "medium"
+  },
+  {
+    "id": "aws-cp-billing-004",
+    "text": "¿Qué son las Spot Instances de AWS y cuándo son más adecuadas?",
+    "options": [
+      "Instancias reservadas para uso dedicado",
+      "Instancias de capacidad sobrante con descuentos de hasta 90%, adecuadas para cargas interrumpibles",
+      "Instancias de alto rendimiento para bases de datos",
+      "Instancias gratuitas del nivel free tier"
+    ],
+    "correct_index": 1,
+    "explanation": "Las Spot Instances usan capacidad sobrante de AWS a precios reducidos (hasta 90% menos). Pueden ser interrumpidas con 2 minutos de aviso. Son ideales para procesamiento en batch, renderizado, CI/CD y cargas tolerantes a interrupciones.",
+    "domain": "BILLING",
+    "provider": "AWS",
+    "difficulty": "medium"
+  },
+  {
+    "id": "aws-cp-concepts-001",
+    "text": "¿Cuál de los siguientes describe mejor el modelo de responsabilidad compartida de AWS?",
+    "options": [
+      "AWS es responsable de todo, incluyendo los datos del cliente",
+      "El cliente es responsable de toda la seguridad",
+      "AWS gestiona la seguridad de la infraestructura; el cliente gestiona sus datos y configuraciones",
+      "AWS y el cliente comparten todos los costos de seguridad a partes iguales"
+    ],
+    "correct_index": 2,
+    "explanation": "En el modelo de responsabilidad compartida, AWS es responsable de la seguridad 'de' la nube (hardware, software de virtualización, redes físicas) y el cliente es responsable de la seguridad 'en' la nube (datos, configuraciones, accesos, sistemas operativos en EC2).",
+    "domain": "CLOUD_CONCEPTS",
+    "provider": "AWS",
+    "difficulty": "medium"
+  },
+  {
+    "id": "aws-cp-concepts-002",
+    "text": "¿Cuáles son los tres modelos de servicio cloud definidos por el NIST?",
+    "options": [
+      "Public, Private, Hybrid",
+      "IaaS, PaaS, SaaS",
+      "On-Demand, Reserved, Spot",
+      "Compute, Storage, Network"
+    ],
+    "correct_index": 1,
+    "explanation": "Los tres modelos de servicio cloud son: IaaS (Infrastructure as a Service, como EC2), PaaS (Platform as a Service, como Elastic Beanstalk), y SaaS (Software as a Service, como herramientas SaaS construidas sobre AWS).",
+    "domain": "CLOUD_CONCEPTS",
+    "provider": "AWS",
+    "difficulty": "easy"
+  },
+  {
+    "id": "aws-cp-concepts-003",
+    "text": "Una empresa migra a AWS para poder aumentar o reducir sus servidores según la demanda en minutos. ¿Qué ventaja del cloud describe esto?",
+    "options": ["Alta disponibilidad", "Elasticidad", "Durabilidad", "Seguridad"],
+    "correct_index": 1,
+    "explanation": "La elasticidad es la capacidad de aumentar o reducir recursos automáticamente según la demanda. Es una de las ventajas fundamentales del cloud computing sobre la infraestructura on-premise.",
+    "domain": "CLOUD_CONCEPTS",
+    "provider": "AWS",
+    "difficulty": "easy"
+  },
+  {
+    "id": "aws-cp-concepts-004",
+    "text": "¿Qué significa 'alta disponibilidad' en el contexto de AWS?",
+    "options": [
+      "Que el sistema nunca falla",
+      "Que el sistema se diseña para minimizar el tiempo de inactividad usando redundancia en múltiples zonas",
+      "Que AWS garantiza 100% de uptime",
+      "Que el sistema usa siempre los servidores más rápidos"
+    ],
+    "correct_index": 1,
+    "explanation": "Alta disponibilidad significa diseñar sistemas que minimicen el tiempo de inactividad desplegando en múltiples Availability Zones. AWS ofrece Multi-AZ en servicios como RDS, y se puede usar Elastic Load Balancing con EC2 en múltiples AZs.",
+    "domain": "CLOUD_CONCEPTS",
+    "provider": "AWS",
+    "difficulty": "medium"
+  },
+  {
+    "id": "aws-cp-concepts-005",
+    "text": "¿Cuál es la diferencia entre una Región y una Zona de Disponibilidad (AZ) en AWS?",
+    "options": [
+      "Son lo mismo, solo términos diferentes",
+      "Una Región es un país; una AZ es una ciudad",
+      "Una Región es un área geográfica con múltiples AZs; una AZ es un datacenter aislado dentro de esa región",
+      "Una AZ es más grande que una Región"
+    ],
+    "correct_index": 2,
+    "explanation": "Una Región AWS es una ubicación geográfica (ej. us-east-1) con múltiples Availability Zones. Cada AZ es uno o más datacenters físicamente separados con energía, red y conectividad redundantes. Usar múltiples AZs protege contra fallas de datacenter.",
+    "domain": "CLOUD_CONCEPTS",
+    "provider": "AWS",
+    "difficulty": "easy"
+  },
+  {
+    "id": "aws-cp-aiml-001",
+    "text": "Una empresa quiere agregar reconocimiento de imágenes a su aplicación sin entrenar modelos propios. ¿Qué servicio de AWS usarías?",
+    "options": ["Amazon SageMaker", "Amazon Rekognition", "AWS DeepLens", "Amazon Textract"],
+    "correct_index": 1,
+    "explanation": "Amazon Rekognition es un servicio de visión por computadora que detecta objetos, personas, texto y contenido inapropiado en imágenes y videos. No requiere conocimiento de ML para usarlo.",
+    "domain": "AI_ML",
+    "provider": "AWS",
+    "difficulty": "easy"
+  },
+  {
+    "id": "aws-cp-aiml-002",
+    "text": "¿Qué servicio de AWS permite construir, entrenar y desplegar modelos de machine learning a escala?",
+    "options": ["Amazon Comprehend", "Amazon Rekognition", "Amazon SageMaker", "AWS Lambda"],
+    "correct_index": 2,
+    "explanation": "Amazon SageMaker es la plataforma de ML de AWS. Permite preparar datos, construir, entrenar, optimizar y desplegar modelos de machine learning con herramientas integradas como Jupyter notebooks y pipelines de entrenamiento.",
+    "domain": "AI_ML",
+    "provider": "AWS",
+    "difficulty": "medium"
+  },
+  {
+    "id": "aws-cp-aiml-003",
+    "text": "Una empresa quiere analizar el sentimiento de reseñas de clientes en texto. ¿Qué servicio de AWS es el más adecuado?",
+    "options": ["Amazon Polly", "Amazon Transcribe", "Amazon Comprehend", "Amazon Lex"],
+    "correct_index": 2,
+    "explanation": "Amazon Comprehend es el servicio de procesamiento de lenguaje natural (NLP) de AWS. Detecta sentimiento, entidades, idioma y relaciones en texto sin necesidad de entrenar modelos.",
+    "domain": "AI_ML",
+    "provider": "AWS",
+    "difficulty": "easy"
+  },
+  {
+    "id": "aws-cp-aiml-004",
+    "text": "¿Qué servicio de AWS convierte texto a voz de forma natural?",
+    "options": ["Amazon Transcribe", "Amazon Polly", "Amazon Lex", "Amazon Comprehend"],
+    "correct_index": 1,
+    "explanation": "Amazon Polly convierte texto en voz de forma natural usando deep learning. Soporta múltiples idiomas y voces. Se usa en aplicaciones de accesibilidad, podcasts generados automáticamente y asistentes de voz.",
+    "domain": "AI_ML",
+    "provider": "AWS",
+    "difficulty": "easy"
+  },
+  {
+    "id": "aws-cp-aiml-005",
+    "text": "Una empresa quiere construir un chatbot para atención al cliente sin conocimiento profundo de ML. ¿Qué servicio de AWS usaría?",
+    "options": ["Amazon SageMaker", "Amazon Lex", "Amazon Comprehend", "Amazon Rekognition"],
+    "correct_index": 1,
+    "explanation": "Amazon Lex es el servicio para construir interfaces conversacionales (chatbots y asistentes de voz) usando la misma tecnología de Alexa. Soporta reconocimiento de intenciones y gestión de conversaciones sin entrenar modelos de ML.",
+    "domain": "AI_ML",
+    "provider": "AWS",
+    "difficulty": "medium"
+  },
+  {
+    "id": "aws-cp-tech-007",
+    "text": "Una empresa tiene una aplicación crítica que no puede tolerar más de 1 hora de inactividad. ¿Qué estrategia de despliegue en AWS es más adecuada?",
+    "options": [
+      "Desplegar en una sola EC2 grande",
+      "Usar Auto Scaling Group con múltiples AZs y Elastic Load Balancer",
+      "Usar S3 para almacenar la aplicación",
+      "Usar una sola AZ con múltiples instancias"
+    ],
+    "correct_index": 1,
+    "explanation": "Un Auto Scaling Group distribuido en múltiples Availability Zones con un Elastic Load Balancer garantiza alta disponibilidad. Si una AZ falla, las instancias en otras AZs siguen sirviendo tráfico. El Auto Scaling reemplaza instancias fallidas automáticamente.",
+    "domain": "TECHNOLOGY",
+    "provider": "AWS",
+    "difficulty": "medium"
+  },
+  {
+    "id": "aws-cp-tech-008",
+    "text": "Una empresa procesa grandes volúmenes de datos históricos para reportes de negocio. ¿Qué servicio de AWS es más adecuado?",
+    "options": ["Amazon RDS", "Amazon DynamoDB", "Amazon Redshift", "Amazon ElastiCache"],
+    "correct_index": 2,
+    "explanation": "Amazon Redshift es el data warehouse de AWS optimizado para análisis de grandes volúmenes de datos (petabytes). Usa almacenamiento columnar y procesamiento masivamente paralelo (MPP). Es ideal para BI y reportes analíticos.",
+    "domain": "TECHNOLOGY",
+    "provider": "AWS",
+    "difficulty": "medium"
+  },
+  {
+    "id": "aws-cp-security-006",
+    "text": "¿Qué servicio de AWS registra todas las llamadas a la API realizadas en la cuenta para auditoría?",
+    "options": ["Amazon CloudWatch", "AWS CloudTrail", "AWS Config", "Amazon Inspector"],
+    "correct_index": 1,
+    "explanation": "AWS CloudTrail registra todas las llamadas a la API de AWS realizadas en la cuenta, incluyendo quién las hizo, desde qué IP, qué acción se realizó y cuándo. Es fundamental para auditoría de seguridad y cumplimiento.",
+    "domain": "SECURITY",
+    "provider": "AWS",
+    "difficulty": "easy"
+  },
+  {
+    "id": "aws-cp-billing-005",
+    "text": "Una empresa tiene múltiples cuentas de AWS para diferentes equipos. ¿Qué servicio permite gestionar y consolidar la facturación?",
+    "options": ["AWS IAM", "AWS Organizations", "AWS Control Tower", "AWS Budgets"],
+    "correct_index": 1,
+    "explanation": "AWS Organizations permite gestionar múltiples cuentas de AWS centralmente. Ofrece facturación consolidada (un solo pago para todas las cuentas), lo que también permite compartir descuentos por volumen entre cuentas.",
+    "domain": "BILLING",
+    "provider": "AWS",
+    "difficulty": "medium"
+  },
+  {
+    "id": "aws-cp-concepts-006",
+    "text": "¿Cuál es la ventaja del modelo de gasto 'pay-as-you-go' (pago por uso) del cloud frente a infraestructura on-premise?",
+    "options": [
+      "Es siempre más barato que on-premise",
+      "Elimina la necesidad de planificación de capacidad anticipada y convierte gastos de capital en gastos operativos",
+      "Garantiza mejor rendimiento que servidores propios",
+      "No requiere ninguna gestión de infraestructura"
+    ],
+    "correct_index": 1,
+    "explanation": "El modelo pay-as-you-go convierte los gastos de capital (CapEx, comprar servidores) en gastos operativos (OpEx, pagar por uso). Elimina la sobreaprovisionamiento, permite experimentar sin grandes inversiones iniciales y ajustar costos según la demanda real.",
+    "domain": "CLOUD_CONCEPTS",
+    "provider": "AWS",
+    "difficulty": "medium"
+  }
+]

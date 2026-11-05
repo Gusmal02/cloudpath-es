@@ -49,7 +49,7 @@ export function ExamMode() {
   const [params] = useSearchParams()
   const provider = (params.get('provider') ?? 'AWS') as Provider
   const navigate = useNavigate()
-  const { setTutorContext } = useTutorContext()
+  const { setTutorContext, clearTutorHistory } = useTutorContext()
 
   const [session, setSession] = useState<ExamSession | null>(null)
   const [currentIdx, setCurrentIdx] = useState(0)
@@ -63,6 +63,10 @@ export function ExamMode() {
   const [finished, setFinished] = useState(false)
   const [resuming, setResuming] = useState(false)
   const sessionRef = useRef<ExamSession | null>(null)
+
+  useEffect(() => {
+    clearTutorHistory()
+  }, [provider]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     const saved = loadExam(provider)
@@ -211,7 +215,7 @@ export function ExamMode() {
           <ExplanationPanel
             isCorrect={isCorrect}
             explanation={question.explanation}
-            correctOption={question.options[question.correct_index]}
+            correctOptions={(question.correct_indices ?? [question.correct_index]).map((i: number) => question.options[i])}
           />
         )}
 

@@ -12,7 +12,7 @@ import t from '../i18n/es.json'
 export function StudyMode() {
   const [params] = useSearchParams()
   const provider = (params.get('provider') ?? 'AWS') as Provider
-  const { setTutorContext } = useTutorContext()
+  const { setTutorContext, clearTutorHistory } = useTutorContext()
   const [question, setQuestion] = useState<Question | null>(null)
   const [seen, setSeen] = useState<string[]>([])
   const [selected, setSelected] = useState<number | null>(null)
@@ -42,8 +42,9 @@ export function StudyMode() {
   )
 
   useEffect(() => {
+    clearTutorHistory()
     loadNext([])
-  }, [loadNext])
+  }, [loadNext]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     setTutorContext({
@@ -109,7 +110,7 @@ export function StudyMode() {
                 <ExplanationPanel
                   isCorrect={isCorrect}
                   explanation={question.explanation}
-                  correctOption={question.options[question.correct_index]}
+                  correctOptions={(question.correct_indices ?? [question.correct_index]).map((i: number) => question.options[i])}
                 />
                 {!isCorrect && (
                   <div className="study-arch-hint">

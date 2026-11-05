@@ -1,12 +1,18 @@
 import json
+from functools import lru_cache
 
 import chromadb
 from chromadb.utils import embedding_functions
 from questions.models import Question
 
 
+@lru_cache(maxsize=4)
+def _get_client(chroma_path: str) -> chromadb.PersistentClient:
+    return chromadb.PersistentClient(path=chroma_path)
+
+
 def _get_collection(collection_name: str, chroma_path: str):
-    client = chromadb.PersistentClient(path=chroma_path)
+    client = _get_client(chroma_path)
     ef = embedding_functions.DefaultEmbeddingFunction()
     return client.get_or_create_collection(
         name=collection_name,
