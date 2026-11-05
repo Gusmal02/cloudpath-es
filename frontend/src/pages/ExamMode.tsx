@@ -75,6 +75,9 @@ export function ExamMode() {
     } else {
       startExam(provider, 30)
         .then((s) => {
+          if (s.questions.length < 30) {
+            console.warn(`Examen iniciado con ${s.questions.length} preguntas (esperadas 30) para ${provider}`)
+          }
           setSession(s)
           sessionRef.current = s
           saveExam(provider, { session: s, currentIdx: 0, secondsLeft: EXAM_SECONDS, provider })
@@ -103,6 +106,7 @@ export function ExamMode() {
 
   async function handleNext() {
     if (!session) return
+    setResuming(false)
     if (currentIdx + 1 >= session.questions.length) {
       const r = await getResult(session.session_id)
       setResult(r)

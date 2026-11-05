@@ -9,47 +9,48 @@ const providers: Provider[] = ['AWS', 'GCP', 'AZURE']
 const providerNames = t.providers as Record<string, string>
 const domainNames = t.domains as Record<string, string>
 
-const archCard = {
-  id: 'arch' as const,
-  label: 'Arquitecturas',
-  desc: 'Diseña diagramas de infraestructura cloud',
-  icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+const ArchIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
     <rect x="2" y="3" width="6" height="5" rx="1"/>
     <rect x="16" y="3" width="6" height="5" rx="1"/>
     <rect x="9" y="16" width="6" height="5" rx="1"/>
     <path d="M5 8v4h14V8M12 12v4"/>
-  </svg>`,
+  </svg>
+)
+
+const ExamIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="5" y="2" width="14" height="20" rx="2"/>
+    <path d="M9 7h6M9 11h6M9 15h4"/>
+    <circle cx="17" cy="17" r="4" fill="var(--base)" stroke="var(--accent)"/>
+    <path d="M15.5 17l1 1 2-2" stroke="var(--ok)" strokeWidth="1.5"/>
+  </svg>
+)
+
+const StudyIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+  </svg>
+)
+
+const ReviewIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+  </svg>
+)
+
+const archCard = {
+  id: 'arch' as const,
+  label: 'Arquitecturas',
+  desc: 'Diseña diagramas de infraestructura cloud',
+  Icon: ArchIcon,
 }
 
-const modes: { id: ExamMode; label: string; desc: string; icon: string }[] = [
-  {
-    id: 'exam',
-    label: t.mode_exam,
-    desc: t.mode_exam_desc,
-    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="5" y="2" width="14" height="20" rx="2"/>
-      <path d="M9 7h6M9 11h6M9 15h4"/>
-      <circle cx="17" cy="17" r="4" fill="var(--base)" stroke="var(--accent)"/>
-      <path d="M15.5 17l1 1 2-2" stroke="var(--ok)" stroke-width="1.5"/>
-    </svg>`,
-  },
-  {
-    id: 'study',
-    label: t.mode_study,
-    desc: t.mode_study_desc,
-    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
-      <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
-    </svg>`,
-  },
-  {
-    id: 'review',
-    label: t.mode_review,
-    desc: t.mode_review_desc,
-    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-      <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
-    </svg>`,
-  },
+const modes: { id: ExamMode; label: string; desc: string; Icon: () => JSX.Element }[] = [
+  { id: 'exam',   label: t.mode_exam,   desc: t.mode_exam_desc,   Icon: ExamIcon },
+  { id: 'study',  label: t.mode_study,  desc: t.mode_study_desc,  Icon: StudyIcon },
+  { id: 'review', label: t.mode_review, desc: t.mode_review_desc, Icon: ReviewIcon },
 ]
 
 export function Home() {
@@ -128,7 +129,7 @@ export function Home() {
       <div className="mode-cards">
         {modes.map((m) => (
           <button key={m.id} className={`mode-card mode-card--${m.id}`} onClick={() => go(m.id)}>
-            <div className="mode-card-icon" dangerouslySetInnerHTML={{ __html: m.icon }} />
+            <div className="mode-card-icon"><m.Icon /></div>
             <div className="mode-card-body">
               <h2 className="mode-card-title">{m.label}</h2>
               <p className="mode-card-desc">{m.desc}</p>
@@ -140,7 +141,7 @@ export function Home() {
           className="mode-card mode-card--arch"
           onClick={() => navigate(`/arch?provider=${provider}`)}
         >
-          <div className="mode-card-icon" dangerouslySetInnerHTML={{ __html: archCard.icon }} />
+          <div className="mode-card-icon"><archCard.Icon /></div>
           <div className="mode-card-body">
             <h2 className="mode-card-title">{archCard.label}</h2>
             <p className="mode-card-desc">{archCard.desc}</p>

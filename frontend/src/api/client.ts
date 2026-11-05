@@ -118,7 +118,7 @@ export interface GeneratedQuestion {
   id: string
   provider: string
   domain: string
-  question: string
+  text: string
   options: string[]
   correct_index: number
   explanation: string

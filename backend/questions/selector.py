@@ -67,6 +67,9 @@ def select_exam_set(
     chroma_path: str = "data/chroma",
     collection_name: str = "questions",
 ) -> list[Question]:
+    import logging
+    logger = logging.getLogger(__name__)
+
     domains = [d.value for d in Domain]
     per_domain = max(1, n // len(domains))
     extra = n - per_domain * len(domains)
@@ -88,11 +91,28 @@ def select_exam_set(
         selected.extend(results)
         used_ids.extend([q.id for q in results])
 
+    # Second pass: fill deficit by pulling extras from domains with more stock
+    deficit = n - len(selected)
+    if deficit > 0:
+        for domain in random.sample(domains, len(domains)):
+            if deficit <= 0:
+                break
+            extras = query_questions(
+                collection_name=collection_name,
+                chroma_path=chroma_path,
+                domain=domain,
+                exclude_ids=used_ids,
+                n=deficit,
+                provider=provider,
+            )
+            selected.extend(extras)
+            used_ids.extend([q.id for q in extras])
+            deficit -= len(extras)
+
     random.shuffle(selected)
     result = selected[:n]
     if len(result) < n:
-        import logging
-        logging.getLogger(__name__).warning(
+        logger.warning(
             "select_exam_set: requested %d questions for provider=%s but only %d available",
             n, provider, len(result),
         )
