@@ -9,6 +9,7 @@ import {
   useNodesState,
   useReactFlow,
 } from '@xyflow/react'
+import type { Edge, Node } from '@xyflow/react'
 import '@xyflow/react/dist/style.css'
 import { useCallback, useEffect, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
@@ -32,8 +33,8 @@ function ArchModeInner() {
   const navigate = useNavigate()
   const { setTutorContext } = useTutorContext()
 
-  const [nodes, setNodes, onNodesChange] = useNodesState([])
-  const [edges, setEdges, onEdgesChange] = useEdgesState([])
+  const [nodes, setNodes, onNodesChange] = useNodesState<Node>([])
+  const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([])
   const { screenToFlowPosition } = useReactFlow()
 
   const [archName, setArchName] = useState('')

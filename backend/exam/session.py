@@ -93,12 +93,13 @@ def submit_answer(
     is_correct = set(chosen_indices) == set(correct_indices)
     chosen_index = chosen_indices[0]
 
-    db.execute(
-        "INSERT INTO user_answers (id, session_id, question_id, chosen_index, is_correct, answered_at) VALUES (?, ?, ?, ?, ?, ?)",
+    rows_changed = db.execute(
+        "INSERT OR IGNORE INTO user_answers (id, session_id, question_id, chosen_index, is_correct, answered_at) VALUES (?, ?, ?, ?, ?, ?)",
         (str(uuid.uuid4()), session_id, question_id, chosen_index, int(is_correct), _now()),
-    )
+    ).rowcount
 
-    update_domain_progress(db, domain, provider, is_correct)
+    if rows_changed:  # skip domain_progress on duplicate submit
+        update_domain_progress(db, domain, provider, is_correct)
     return is_correct
 
 
@@ -109,7 +110,9 @@ def get_result(db: sqlite3.Connection, session_id: str) -> ExamResult:
     ).fetchall()
 
     score = sum(1 for a in answers if a["is_correct"])
-    total = len(answers)
+    # Use total from the session record so unanswered questions count as wrong
+    row = db.execute("SELECT total FROM exam_sessions WHERE id = ?", (session_id,)).fetchone()
+    total = row["total"] if row else len(answers)
 
     domain_rows = db.execute(
         """

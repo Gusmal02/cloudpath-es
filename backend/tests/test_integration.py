@@ -11,8 +11,8 @@ def client(tmp_path_factory):
     db_path = str(db_dir / "test.db")
     chroma_path = str(db_dir / "chroma")
 
-    os.environ["DB_PATH"] = db_path
-    os.environ["CHROMA_PATH"] = chroma_path
+    os.environ["CLOUDPATH_DB_PATH"] = db_path
+    os.environ["CLOUDPATH_CHROMA_PATH"] = chroma_path
 
     # Import after env vars are set so get_settings() picks them up
     from config import get_settings
@@ -23,6 +23,8 @@ def client(tmp_path_factory):
         yield c
 
     get_settings.cache_clear()
+    os.environ.pop("CLOUDPATH_DB_PATH", None)
+    os.environ.pop("CLOUDPATH_CHROMA_PATH", None)
 
 
 def test_health_check(client):

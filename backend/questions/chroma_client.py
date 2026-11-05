@@ -1,4 +1,5 @@
 import json
+import random
 from functools import lru_cache
 
 import chromadb
@@ -33,7 +34,7 @@ def embed_questions(
     if not new_questions:
         return
 
-    collection.add(
+    collection.upsert(
         ids=[q.id for q in new_questions],
         documents=[q.text for q in new_questions],
         metadatas=[
@@ -41,7 +42,7 @@ def embed_questions(
                 "domain": q.domain,
                 "provider": q.provider,
                 "difficulty": q.difficulty,
-                "options": "|".join(q.options),
+                "options": json.dumps(q.options),
                 "correct_index": q.correct_index,
                 "correct_indices": json.dumps(q.all_correct_indices),
                 "explanation": q.explanation,
@@ -64,10 +65,12 @@ def get_question_by_id(
     text = result["documents"][0]
     raw_indices = meta.get("correct_indices")
     correct_indices = json.loads(raw_indices) if raw_indices else None
+    raw_options = meta.get("options", "[]")
+    options = json.loads(raw_options) if raw_options.startswith("[") else raw_options.split("|")
     return Question(
         id=question_id,
         text=text,
-        options=meta["options"].split("|"),
+        options=options,
         correct_index=int(meta["correct_index"]),
         correct_indices=correct_indices,
         explanation=meta["explanation"],
@@ -101,11 +104,13 @@ def query_questions(
         text = results["documents"][i]
         raw_indices = meta.get("correct_indices")
         correct_indices = json.loads(raw_indices) if raw_indices else None
+        raw_opts = meta.get("options", "[]")
+        opts = json.loads(raw_opts) if raw_opts.startswith("[") else raw_opts.split("|")
         questions.append(
             Question(
                 id=qid,
                 text=text,
-                options=meta["options"].split("|"),
+                options=opts,
                 correct_index=int(meta["correct_index"]),
                 correct_indices=correct_indices,
                 explanation=meta["explanation"],
@@ -115,4 +120,4 @@ def query_questions(
             )
         )
 
-    return questions[:n]
+    return random.sample(questions, min(n, len(questions)))

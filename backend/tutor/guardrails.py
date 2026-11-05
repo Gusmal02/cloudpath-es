@@ -25,11 +25,13 @@ BLOCKED_PATTERNS = [
     r"\bpretend\s+(you\s+are|to\s+be)\b",
     r"\bforget\s+(everything|your\s+instructions)\b",
     r"\byou\s+are\s+now\b",
-    r"\bDAN\b",
     r"\bjailbreak\b",
 ]
 
+# DAN compiled case-sensitive to avoid blocking Spanish word "dan"
+_DAN_PATTERN = re.compile(r"\bDAN\b")
 _compiled = [re.compile(p, re.IGNORECASE) for p in BLOCKED_PATTERNS]
+_compiled.append(_DAN_PATTERN)
 
 
 def check_message(message: str, answered: bool) -> tuple[bool, str | None]:

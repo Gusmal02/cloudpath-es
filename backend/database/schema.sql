@@ -15,8 +15,11 @@ CREATE TABLE IF NOT EXISTS user_answers (
     chosen_index INTEGER NOT NULL,
     is_correct INTEGER NOT NULL,
     answered_at TEXT NOT NULL,
-    FOREIGN KEY (session_id) REFERENCES exam_sessions(id)
+    FOREIGN KEY (session_id) REFERENCES exam_sessions(id),
+    UNIQUE (session_id, question_id)
 );
+
+CREATE INDEX IF NOT EXISTS idx_user_answers_session ON user_answers (session_id);
 
 CREATE TABLE IF NOT EXISTS domain_progress (
     domain TEXT NOT NULL,

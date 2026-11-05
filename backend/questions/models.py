@@ -1,5 +1,5 @@
 from enum import StrEnum
-from pydantic import BaseModel
+from pydantic import BaseModel, computed_field
 
 
 class Domain(StrEnum):
@@ -33,6 +33,12 @@ class Question(BaseModel):
     provider: Provider
     difficulty: Difficulty = Difficulty.MEDIUM
 
+    @computed_field  # type: ignore[misc]
     @property
     def all_correct_indices(self) -> list[int]:
         return self.correct_indices if self.correct_indices is not None else [self.correct_index]
+
+    @computed_field  # type: ignore[misc]
+    @property
+    def num_correct(self) -> int:
+        return len(self.all_correct_indices)

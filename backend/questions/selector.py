@@ -4,20 +4,26 @@ from questions.models import Question, Domain
 from questions.chroma_client import query_questions
 
 
-def _get_weak_domain(db: sqlite3.Connection, provider: str) -> str | None:
-    cursor = db.execute(
+def _get_weak_domain(db: sqlite3.Connection, provider: str) -> str:
+    all_domains = {d.value for d in Domain}
+    rows = db.execute(
         """
-        SELECT domain, correct_count, total_count
+        SELECT domain, CAST(correct_count AS REAL) / NULLIF(total_count, 0) AS ratio
         FROM domain_progress
         WHERE provider = ?
-        ORDER BY CAST(correct_count AS REAL) / NULLIF(total_count, 0) ASC
         """,
         (provider,),
-    )
-    rows = cursor.fetchall()
-    if not rows:
-        return None
-    return rows[0]["domain"]
+    ).fetchall()
+    seen = {r["domain"] for r in rows}
+    # Domains with no attempts get absolute priority
+    untouched = list(all_domains - seen)
+    if untouched:
+        return random.choice(untouched)
+    # Among seen domains, pick one of the worst performers via weighted sample
+    rows_sorted = sorted(rows, key=lambda r: r["ratio"] or 0.0)
+    # Weight: weakest gets highest chance; use rank-based weights
+    weights = [len(rows_sorted) - i for i in range(len(rows_sorted))]
+    return random.choices([r["domain"] for r in rows_sorted], weights=weights, k=1)[0]
 
 
 def select_question(
@@ -28,10 +34,6 @@ def select_question(
     collection_name: str = "questions",
 ) -> Question | None:
     domain = _get_weak_domain(db, provider)
-
-    if domain is None:
-        domain = random.choice([d.value for d in Domain])
-
     results = query_questions(
         collection_name=collection_name,
         chroma_path=chroma_path,

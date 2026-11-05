@@ -151,6 +151,20 @@ export function ExamMode() {
     navigate(`/exam?provider=${provider}`)
   }
 
+  // MUST be before any conditional return — Rules of Hooks
+  useEffect(() => {
+    if (!session) return
+    const q = session.questions[currentIdx]
+    setTutorContext({
+      page: 'exam',
+      provider,
+      domain: q?.domain ?? null,
+      questionText: q?.text ?? null,
+      questionOptions: q?.options ?? [],
+      answered,
+    })
+  }, [currentIdx, answered, session]) // eslint-disable-line react-hooks/exhaustive-deps
+
   if (error) return (
     <>
       <AppHeader title={t.mode_exam} provider={provider} />
@@ -174,20 +188,6 @@ export function ExamMode() {
   }
 
   const question = session.questions[currentIdx]
-
-  // Publica contexto para el tutor — solo cuando cambia la pregunta, nunca en tick del timer
-  useEffect(() => {
-    if (!session) return
-    const q = session.questions[currentIdx]
-    setTutorContext({
-      page: 'exam',
-      provider,
-      domain: q?.domain ?? null,
-      questionText: q?.text ?? null,
-      questionOptions: q?.options ?? [],
-      answered,
-    })
-  }, [currentIdx, answered, session]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <>
