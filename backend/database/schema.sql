@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS user_answers (
     session_id TEXT NOT NULL,
     question_id TEXT NOT NULL,
     chosen_index INTEGER NOT NULL,
+    chosen_indices TEXT,
     is_correct INTEGER NOT NULL,
     answered_at TEXT NOT NULL,
     FOREIGN KEY (session_id) REFERENCES exam_sessions(id),

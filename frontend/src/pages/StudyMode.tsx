@@ -19,6 +19,8 @@ export function StudyMode() {
   const [selectedIndices, setSelectedIndices] = useState<number[]>([])
   const [answered, setAnswered] = useState(false)
   const [isCorrect, setIsCorrect] = useState(false)
+  const [feedbackExplanation, setFeedbackExplanation] = useState('')
+  const [feedbackCorrectIndices, setFeedbackCorrectIndices] = useState<number[]>([])
   const [error, setError] = useState('')
   const [exhausted, setExhausted] = useState(false)
 
@@ -28,6 +30,8 @@ export function StudyMode() {
       setSelected(null)
       setSelectedIndices([])
       setAnswered(false)
+      setFeedbackExplanation('')
+      setFeedbackCorrectIndices([])
       getStudyQuestion(provider, excludeIds)
         .then(setQuestion)
         .catch((err) => {
@@ -76,6 +80,8 @@ export function StudyMode() {
     if (chosen.length === 0) return
     const fb = await submitStudyAnswer(question.id, chosen)
     setIsCorrect(fb.is_correct)
+    setFeedbackExplanation(fb.explanation ?? '')
+    setFeedbackCorrectIndices(fb.correct_indices ?? (fb.correct_index != null ? [fb.correct_index] : []))
     setAnswered(true)
     setSeen((s) => [...s, question.id])
   }
@@ -109,8 +115,8 @@ export function StudyMode() {
               <>
                 <ExplanationPanel
                   isCorrect={isCorrect}
-                  explanation={question.explanation}
-                  correctOptions={(question.correct_indices ?? [question.correct_index]).map((i: number) => question.options[i])}
+                  explanation={feedbackExplanation}
+                  correctOptions={feedbackCorrectIndices.map((i) => question.options[i])}
                 />
                 {!isCorrect && (
                   <div className="study-arch-hint">

@@ -1,3 +1,4 @@
+import json
 import random
 import sqlite3
 import uuid
@@ -83,8 +84,8 @@ def submit_answer(
     chosen_index = chosen_indices[0]
 
     rows_changed = db.execute(
-        "INSERT OR IGNORE INTO user_answers (id, session_id, question_id, chosen_index, is_correct, answered_at) VALUES (?, ?, ?, ?, ?, ?)",
-        (str(uuid.uuid4()), session_id, question_id, chosen_index, int(is_correct), _now()),
+        "INSERT OR IGNORE INTO user_answers (id, session_id, question_id, chosen_index, chosen_indices, is_correct, answered_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
+        (str(uuid.uuid4()), session_id, question_id, chosen_index, json.dumps(chosen_indices), int(is_correct), _now()),
     ).rowcount
 
     if rows_changed:  # skip domain_progress on duplicate submit
