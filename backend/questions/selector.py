@@ -59,8 +59,9 @@ def select_question(
     if results:
         return results[0]
 
-    # fallback: try any domain for same provider
-    for d in random.sample([d.value for d in Domain], len(Domain)):
+    # fallback: try any domain for this provider
+    provider_domains = PROVIDER_DOMAINS.get(provider, [d.value for d in Domain])
+    for d in random.sample(provider_domains, len(provider_domains)):
         results = query_questions(
             collection_name=collection_name,
             chroma_path=chroma_path,

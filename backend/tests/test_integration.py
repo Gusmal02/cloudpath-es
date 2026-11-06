@@ -34,9 +34,9 @@ def client(tmp_path_factory):
 
 
 def test_health_check(client):
-    """Backend responds on root path."""
-    res = client.get("/")
-    assert res.status_code in (200, 404)  # 404 is fine — no root route required
+    """Backend health endpoint returns 200."""
+    res = client.get("/health")
+    assert res.status_code == 200
 
 
 def test_domain_progress_empty(client):

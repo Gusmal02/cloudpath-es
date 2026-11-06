@@ -1,4 +1,7 @@
-export type Domain = 'CLOUD_CONCEPTS' | 'SECURITY' | 'TECHNOLOGY' | 'BILLING' | 'AI_ML'
+export type Domain =
+  | 'CLOUD_CONCEPTS' | 'SECURITY' | 'TECHNOLOGY' | 'BILLING' | 'AI_ML'
+  | 'DIGITAL_TRANSFORMATION' | 'DATA_INNOVATION' | 'INFRASTRUCTURE_MODERNIZATION' | 'GCP_SECURITY' | 'GCP_SCALING'
+  | 'AZURE_CLOUD_CONCEPTS' | 'AZURE_ARCHITECTURE' | 'AZURE_MANAGEMENT'
 export type Provider = 'AWS' | 'GCP' | 'AZURE'
 export type Difficulty = 'easy' | 'medium' | 'hard'
 export type ExamMode = 'exam' | 'study' | 'review'
