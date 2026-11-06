@@ -2,12 +2,17 @@ services:
   backend:
     build: ./backend
     volumes:
-      - ./data:/app/data
+      # Mount only persistent data directories — questions/ stays from the image
+      - cloudpath_db:/app/data/db
+      - cloudpath_chroma:/app/data/chroma
     environment:
-      CLOUDPATH_DB_PATH: data/cloudpath.db
+      CLOUDPATH_DB_PATH: data/db/cloudpath.db
       CLOUDPATH_CHROMA_PATH: data/chroma
       CLOUDPATH_QUESTIONS_DIR: data/questions
-      CLOUDPATH_PORT_FILE: data/.port
+      CLOUDPATH_PORT_FILE: data/db/.port
+      CLOUDPATH_RELOAD: "false"
+      # For Ollama running on the host machine
+      OLLAMA_URL: http://host.docker.internal:11434
     ports:
       - "8000:8000"
     healthcheck:
@@ -24,4 +29,6 @@ services:
       backend:
         condition: service_healthy
 
-volumes: {}
+volumes:
+  cloudpath_db:
+  cloudpath_chroma:

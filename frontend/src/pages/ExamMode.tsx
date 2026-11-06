@@ -58,6 +58,8 @@ export function ExamMode() {
   const [selectedIndices, setSelectedIndices] = useState<number[]>([])
   const [answered, setAnswered] = useState(false)
   const [isCorrect, setIsCorrect] = useState(false)
+  const [feedbackCorrectIndices, setFeedbackCorrectIndices] = useState<number[]>([])
+  const [feedbackExplanation, setFeedbackExplanation] = useState('')
   const [result, setResult] = useState<ExamResult | null>(null)
   const [error, setError] = useState('')
   const [finished, setFinished] = useState(false)
@@ -105,6 +107,8 @@ export function ExamMode() {
     if (chosen.length === 0) return
     const feedback = await submitAnswer(session.session_id, q.id, chosen)
     setIsCorrect(feedback.is_correct)
+    setFeedbackCorrectIndices(feedback.correct_indices ?? (feedback.correct_index != null ? [feedback.correct_index] : []))
+    setFeedbackExplanation(feedback.explanation ?? '')
     setAnswered(true)
   }
 
@@ -122,6 +126,8 @@ export function ExamMode() {
       setSelected(null)
       setSelectedIndices([])
       setAnswered(false)
+      setFeedbackCorrectIndices([])
+      setFeedbackExplanation('')
     }
   }
 
@@ -148,7 +154,26 @@ export function ExamMode() {
 
   function handleRestart() {
     clearExam(provider)
-    navigate(`/exam?provider=${provider}`)
+    setSession(null)
+    setCurrentIdx(0)
+    setSecondsLeft(EXAM_SECONDS)
+    setSelected(null)
+    setSelectedIndices([])
+    setAnswered(false)
+    setIsCorrect(false)
+    setFeedbackCorrectIndices([])
+    setFeedbackExplanation('')
+    setResult(null)
+    setFinished(false)
+    setResuming(false)
+    // Trigger startExam by re-running the load effect via key change
+    startExam(provider, 30)
+      .then((s) => {
+        setSession(s)
+        sessionRef.current = s
+        saveExam(provider, { session: s, currentIdx: 0, secondsLeft: EXAM_SECONDS, provider })
+      })
+      .catch(() => setError(t.error_load))
   }
 
   // MUST be before any conditional return — Rules of Hooks
@@ -214,8 +239,8 @@ export function ExamMode() {
         {answered && (
           <ExplanationPanel
             isCorrect={isCorrect}
-            explanation={question.explanation}
-            correctOptions={(question.correct_indices ?? [question.correct_index]).map((i: number) => question.options[i])}
+            explanation={feedbackExplanation}
+            correctOptions={feedbackCorrectIndices.map((i) => question.options[i])}
           />
         )}
 

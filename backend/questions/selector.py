@@ -3,9 +3,23 @@ import sqlite3
 from questions.models import Question, Domain
 from questions.chroma_client import query_questions
 
+# Single source of truth for domains per provider — matches tutor/topics.py blueprints
+PROVIDER_DOMAINS: dict[str, list[str]] = {
+    "AWS": [
+        Domain.CLOUD_CONCEPTS, Domain.SECURITY, Domain.TECHNOLOGY, Domain.BILLING,
+    ],
+    "GCP": [
+        Domain.DIGITAL_TRANSFORMATION, Domain.DATA_INNOVATION,
+        Domain.INFRASTRUCTURE_MODERNIZATION, Domain.GCP_SECURITY, Domain.GCP_SCALING,
+    ],
+    "AZURE": [
+        Domain.AZURE_CLOUD_CONCEPTS, Domain.AZURE_ARCHITECTURE, Domain.AZURE_MANAGEMENT,
+    ],
+}
+
 
 def _get_weak_domain(db: sqlite3.Connection, provider: str) -> str:
-    all_domains = {d.value for d in Domain}
+    all_domains = set(PROVIDER_DOMAINS.get(provider, [d.value for d in Domain]))
     rows = db.execute(
         """
         SELECT domain, CAST(correct_count AS REAL) / NULLIF(total_count, 0) AS ratio
@@ -72,7 +86,7 @@ def select_exam_set(
     import logging
     logger = logging.getLogger(__name__)
 
-    domains = [d.value for d in Domain]
+    domains = PROVIDER_DOMAINS.get(provider, [d.value for d in Domain])
     per_domain = max(1, n // len(domains))
     extra = n - per_domain * len(domains)
 

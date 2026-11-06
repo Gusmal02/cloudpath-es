@@ -10,26 +10,6 @@ def _now() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
-def update_domain_progress(
-    db: sqlite3.Connection,
-    domain: str,
-    provider: str,
-    is_correct: bool,
-) -> None:
-    db.execute(
-        """
-        INSERT INTO domain_progress (domain, provider, correct_count, total_count, last_updated)
-        VALUES (?, ?, ?, 1, ?)
-        ON CONFLICT(domain, provider) DO UPDATE SET
-            correct_count = correct_count + ?,
-            total_count = total_count + 1,
-            last_updated = ?
-        """,
-        (domain, provider, int(is_correct), _now(), int(is_correct), _now()),
-    )
-    db.commit()
-
-
 def start_exam(db: sqlite3.Connection, provider: str, questions: list[Question]) -> dict:
     session_id = str(uuid.uuid4())
     db.execute(
@@ -48,13 +28,11 @@ def start_exam(db: sqlite3.Connection, provider: str, questions: list[Question])
             "id": q.id,
             "text": q.text,
             "options": options,
-            "correct_index": new_correct_indices[0],
-            "correct_indices": new_correct_indices,
             "num_correct": len(new_correct_indices),
             "domain": q.domain,
             "provider": q.provider,
             "difficulty": q.difficulty,
-            "explanation": q.explanation,
+            # correct_* and explanation omitted — returned by /exam/answer to prevent cheating
         })
 
     return {"session_id": session_id, "questions": shuffled_questions}
@@ -113,6 +91,13 @@ def get_result(db: sqlite3.Connection, session_id: str) -> ExamResult:
     # Use total from the session record so unanswered questions count as wrong
     row = db.execute("SELECT total FROM exam_sessions WHERE id = ?", (session_id,)).fetchone()
     total = row["total"] if row else len(answers)
+
+    # Close the session (idempotent)
+    db.execute(
+        "UPDATE exam_sessions SET finished_at = ?, score = ? WHERE id = ? AND finished_at IS NULL",
+        (_now(), score, session_id),
+    )
+    db.commit()
 
     domain_rows = db.execute(
         """

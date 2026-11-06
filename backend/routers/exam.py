@@ -6,7 +6,7 @@ from database.sqlite_client import get_db
 from exam.models import StartExamRequest, AnswerRequest, ExamResult
 from exam.session import start_exam, submit_answer, get_result
 from questions.selector import select_exam_set
-from questions.chroma_client import query_questions
+from questions.chroma_client import get_question_by_id, query_questions
 
 router = APIRouter(prefix="/exam", tags=["exam"])
 
@@ -89,7 +89,15 @@ def exam_answer(req: AnswerRequest, db: sqlite3.Connection = Depends(_get_db)):
         domain=question_data["domain"],
         provider=question_data["provider"],
     )
-    return {"is_correct": is_correct}
+    # Fetch explanation and correct options from Chroma now that the answer is submitted
+    settings = get_settings()
+    q = get_question_by_id(req.question_id, "questions", settings.chroma_path)
+    return {
+        "is_correct": is_correct,
+        "correct_indices": question_data["correct_indices"],
+        "correct_index": question_data["correct_indices"][0],
+        "explanation": q.explanation if q else "",
+    }
 
 
 @router.get("/result/{session_id}", response_model=ExamResult)

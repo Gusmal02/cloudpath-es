@@ -7,10 +7,10 @@ export interface Question {
   id: string
   text: string
   options: string[]
-  correct_index: number
-  correct_indices: number[]  // always present (single → [correct_index])
-  num_correct: number        // how many the user must select
-  explanation: string
+  correct_index?: number       // absent in exam questions until answered
+  correct_indices?: number[]   // absent in exam questions until answered
+  num_correct: number          // how many the user must select
+  explanation?: string         // absent in exam questions until answered
   domain: Domain
   provider: Provider
   difficulty: Difficulty
@@ -38,5 +38,6 @@ export interface ExamResult {
 export interface AnswerFeedback {
   is_correct: boolean
   correct_index?: number
+  correct_indices?: number[]
   explanation?: string
 }
