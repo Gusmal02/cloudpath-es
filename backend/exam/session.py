@@ -18,13 +18,14 @@ def start_exam(db: sqlite3.Connection, provider: str, questions: list[Question])
     )
     db.commit()
 
-    shuffled_questions = []
+    public_questions = []
+    internal_questions = []
     for q in questions:
         options = list(q.options)
         correct_texts = [options[i] for i in q.all_correct_indices]
         random.shuffle(options)
         new_correct_indices = [options.index(t) for t in correct_texts]
-        shuffled_questions.append({
+        public_questions.append({
             "id": q.id,
             "text": q.text,
             "options": options,
@@ -34,8 +35,18 @@ def start_exam(db: sqlite3.Connection, provider: str, questions: list[Question])
             "difficulty": q.difficulty,
             # correct_* and explanation omitted — returned by /exam/answer to prevent cheating
         })
+        internal_questions.append({
+            "id": q.id,
+            "correct_indices": new_correct_indices,
+            "domain": q.domain,
+            "provider": q.provider,
+        })
 
-    return {"session_id": session_id, "questions": shuffled_questions}
+    return {
+        "session_id": session_id,
+        "questions": public_questions,
+        "_internal": internal_questions,
+    }
 
 
 def update_domain_progress(

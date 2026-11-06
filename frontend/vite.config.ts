@@ -4,7 +4,7 @@ import path from 'node:path'
 import { defineConfig } from 'vite'
 
 function readBackendPort(): number {
-  const portFile = path.resolve(__dirname, '../data/.port')
+  const portFile = path.resolve(__dirname, '../backend/data/.port')
   try {
     const raw = fs.readFileSync(portFile, 'utf8').trim()
     const parsed = parseInt(raw, 10)

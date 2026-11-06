@@ -1,15 +1,27 @@
 import sqlite3
 
 from fastapi import APIRouter, Depends, HTTPException, Query
+from pydantic import BaseModel
 
 from config import get_settings
 from database.sqlite_client import get_db
 from exam.models import StudyAnswerRequest
 from exam.session import update_domain_progress
 from questions.chroma_client import get_question_by_id
+from questions.models import Difficulty, Domain, Provider
 from questions.selector import select_question
 
 router = APIRouter(prefix="/study", tags=["study"])
+
+
+class PublicQuestion(BaseModel):
+    id: str
+    text: str
+    options: list[str]
+    num_correct: int
+    domain: Domain
+    provider: Provider
+    difficulty: Difficulty
 
 
 def _get_db():
@@ -37,7 +49,15 @@ def study_question(
     if question is None:
         raise HTTPException(status_code=404, detail="No questions available")
 
-    return question
+    return PublicQuestion(
+        id=question.id,
+        text=question.text,
+        options=question.options,
+        num_correct=question.num_correct,
+        domain=question.domain,
+        provider=question.provider,
+        difficulty=question.difficulty,
+    )
 
 
 @router.post("/answer")

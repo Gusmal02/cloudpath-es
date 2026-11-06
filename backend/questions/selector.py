@@ -6,14 +6,13 @@ from questions.chroma_client import query_questions
 # Single source of truth for domains per provider — matches tutor/topics.py blueprints
 PROVIDER_DOMAINS: dict[str, list[str]] = {
     "AWS": [
-        Domain.CLOUD_CONCEPTS, Domain.SECURITY, Domain.TECHNOLOGY, Domain.BILLING,
+        Domain.CLOUD_CONCEPTS, Domain.SECURITY, Domain.TECHNOLOGY, Domain.BILLING, Domain.AI_ML,
     ],
     "GCP": [
-        Domain.DIGITAL_TRANSFORMATION, Domain.DATA_INNOVATION,
-        Domain.INFRASTRUCTURE_MODERNIZATION, Domain.GCP_SECURITY, Domain.GCP_SCALING,
+        Domain.CLOUD_CONCEPTS, Domain.SECURITY, Domain.TECHNOLOGY, Domain.BILLING, Domain.AI_ML,
     ],
     "AZURE": [
-        Domain.AZURE_CLOUD_CONCEPTS, Domain.AZURE_ARCHITECTURE, Domain.AZURE_MANAGEMENT,
+        Domain.CLOUD_CONCEPTS, Domain.SECURITY, Domain.TECHNOLOGY, Domain.BILLING, Domain.AI_ML,
     ],
 }
 

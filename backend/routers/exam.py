@@ -58,9 +58,9 @@ def exam_start(req: StartExamRequest, db: sqlite3.Connection = Depends(_get_db))
         raise HTTPException(status_code=404, detail="No questions found for this provider")
 
     result = start_exam(db=db, provider=req.provider, questions=questions)
-    _persist_session_questions(db, result["session_id"], result["questions"])
+    _persist_session_questions(db, result["session_id"], result["_internal"])
 
-    return result
+    return {"session_id": result["session_id"], "questions": result["questions"]}
 
 
 @router.post("/answer")
@@ -102,4 +102,7 @@ def exam_answer(req: AnswerRequest, db: sqlite3.Connection = Depends(_get_db)):
 
 @router.get("/result/{session_id}", response_model=ExamResult)
 def exam_result(session_id: str, db: sqlite3.Connection = Depends(_get_db)):
+    row = db.execute("SELECT id FROM exam_sessions WHERE id = ?", (session_id,)).fetchone()
+    if row is None:
+        raise HTTPException(status_code=404, detail="Session not found")
     return get_result(db=db, session_id=session_id)

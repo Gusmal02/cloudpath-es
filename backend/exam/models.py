@@ -1,9 +1,9 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class StartExamRequest(BaseModel):
     provider: str
-    n_questions: int = 10
+    n_questions: int = Field(default=10, ge=1, le=65)
 
 
 class AnswerRequest(BaseModel):
