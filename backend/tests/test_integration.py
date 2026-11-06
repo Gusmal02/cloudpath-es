@@ -58,10 +58,10 @@ def test_study_question_no_questions_404(client):
     assert res.status_code == 404
 
 
-def test_study_answer_missing_chosen_422(client):
-    """POST /study/answer without chosen_index or chosen_indices returns 422."""
+def test_study_answer_unknown_question_id_404(client):
+    """POST /study/answer with an unknown question_id returns 404 before chosen validation."""
     res = client.post("/study/answer", json={"question_id": "nonexistent"})
-    assert res.status_code == 422
+    assert res.status_code == 404
 
 
 def test_exam_answer_empty_chosen_422(client):

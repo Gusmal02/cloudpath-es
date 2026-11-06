@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS user_answers (
     id TEXT PRIMARY KEY,
     session_id TEXT NOT NULL,
     question_id TEXT NOT NULL,
-    chosen_index INTEGER NOT NULL,
+    chosen_index INTEGER,
     chosen_indices TEXT,
     is_correct INTEGER NOT NULL,
     answered_at TEXT NOT NULL,

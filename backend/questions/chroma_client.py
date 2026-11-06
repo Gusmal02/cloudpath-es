@@ -28,7 +28,7 @@ def embed_questions(
     chroma_path: str = "data/chroma",
 ) -> None:
     collection = _get_collection(collection_name, chroma_path)
-    existing = set(collection.get()["ids"])
+    existing = set(collection.get(ids=[q.id for q in questions])["ids"])
 
     new_questions = [q for q in questions if q.id not in existing]
     if not new_questions:

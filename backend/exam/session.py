@@ -22,10 +22,11 @@ def start_exam(db: sqlite3.Connection, provider: str, questions: list[Question])
     public_questions = []
     internal_questions = []
     for q in questions:
-        options = list(q.options)
-        correct_texts = [options[i] for i in q.all_correct_indices]
-        random.shuffle(options)
-        new_correct_indices = [options.index(t) for t in correct_texts]
+        indices = list(range(len(q.options)))
+        random.shuffle(indices)
+        options = [q.options[i] for i in indices]
+        reverse_map = {old: new for new, old in enumerate(indices)}
+        new_correct_indices = [reverse_map[i] for i in q.all_correct_indices]
         public_questions.append({
             "id": q.id,
             "text": q.text,
@@ -81,7 +82,7 @@ def submit_answer(
     provider: str,
 ) -> bool:
     is_correct = set(chosen_indices) == set(correct_indices)
-    chosen_index = chosen_indices[0]
+    chosen_index = chosen_indices[0] if len(chosen_indices) == 1 else None
 
     rows_changed = db.execute(
         "INSERT OR IGNORE INTO user_answers (id, session_id, question_id, chosen_index, chosen_indices, is_correct, answered_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
