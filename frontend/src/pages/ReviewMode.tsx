@@ -30,6 +30,7 @@ export function ReviewMode() {
 
   useEffect(() => {
     clearTutorHistory()
+    setSeen([])
     getDomainProgress(provider).then(setProgress).catch(() => {})
     loadNext([])
   }, [provider]) // eslint-disable-line react-hooks/exhaustive-deps

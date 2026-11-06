@@ -119,7 +119,7 @@ def query_questions(
                 correct_index=int(meta["correct_index"]),
                 correct_indices=correct_indices,
                 explanation=meta["explanation"],
-                domain=domain,
+                domain=meta["domain"],
                 provider=meta["provider"],
                 difficulty=meta["difficulty"],
             )

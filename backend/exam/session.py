@@ -80,16 +80,22 @@ def submit_answer(
     domain: str,
     provider: str,
 ) -> bool:
+    # Return stored result on duplicate submit (avoids feedback/score mismatch)
+    existing = db.execute(
+        "SELECT is_correct FROM user_answers WHERE session_id = ? AND question_id = ?",
+        (session_id, question_id),
+    ).fetchone()
+    if existing:
+        return bool(existing["is_correct"])
+
     is_correct = set(chosen_indices) == set(correct_indices)
     chosen_index = chosen_indices[0] if len(chosen_indices) == 1 else None
 
-    rows_changed = db.execute(
-        "INSERT OR IGNORE INTO user_answers (id, session_id, question_id, chosen_index, chosen_indices, is_correct, answered_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
+    db.execute(
+        "INSERT INTO user_answers (id, session_id, question_id, chosen_index, chosen_indices, is_correct, answered_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
         (str(uuid.uuid4()), session_id, question_id, chosen_index, json.dumps(chosen_indices), int(is_correct), _now()),
-    ).rowcount
-
-    if rows_changed:  # skip domain_progress on duplicate submit
-        update_domain_progress(db, domain, provider, is_correct)
+    )
+    update_domain_progress(db, domain, provider, is_correct)
     return is_correct
 
 
@@ -104,11 +110,27 @@ def get_result(db: sqlite3.Connection, session_id: str) -> ExamResult:
     row = db.execute("SELECT total FROM exam_sessions WHERE id = ?", (session_id,)).fetchone()
     total = row["total"] if row else len(answers)
 
-    # Close the session (idempotent)
-    db.execute(
+    # Close the session (idempotent); rowcount > 0 means first close
+    rows_changed = db.execute(
         "UPDATE exam_sessions SET finished_at = ?, score = ? WHERE id = ? AND finished_at IS NULL",
         (_now(), score, session_id),
-    )
+    ).rowcount
+
+    if rows_changed:
+        # Register unanswered questions as incorrect in domain_progress (once only)
+        unanswered = db.execute(
+            """
+            SELECT sq.domain, sq.provider
+            FROM session_questions sq
+            LEFT JOIN user_answers ua
+              ON ua.session_id = sq.session_id AND ua.question_id = sq.question_id
+            WHERE sq.session_id = ? AND ua.question_id IS NULL
+            """,
+            (session_id,),
+        ).fetchall()
+        for r in unanswered:
+            update_domain_progress(db, r["domain"], r["provider"], is_correct=False)
+
     db.commit()
 
     domain_rows = db.execute(

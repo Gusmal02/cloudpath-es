@@ -47,6 +47,7 @@ export function StudyMode() {
 
   useEffect(() => {
     clearTutorHistory()
+    setSeen([])
     loadNext([])
   }, [loadNext]) // eslint-disable-line react-hooks/exhaustive-deps
 

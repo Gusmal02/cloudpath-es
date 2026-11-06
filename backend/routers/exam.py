@@ -31,7 +31,6 @@ def _persist_session_questions(db: sqlite3.Connection, session_id: str, question
             for sq in questions
         ],
     )
-    db.commit()
 
 
 def _load_question_data(db: sqlite3.Connection, session_id: str, question_id: str) -> dict | None:
