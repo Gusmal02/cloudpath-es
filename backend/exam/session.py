@@ -17,7 +17,6 @@ def start_exam(db: sqlite3.Connection, provider: str, questions: list[Question])
         "INSERT INTO exam_sessions (id, started_at, mode, provider, total) VALUES (?, ?, ?, ?, ?)",
         (session_id, _now(), "exam", provider, len(questions)),
     )
-    db.commit()
 
     public_questions = []
     internal_questions = []
@@ -115,12 +114,12 @@ def get_result(db: sqlite3.Connection, session_id: str) -> ExamResult:
     domain_rows = db.execute(
         """
         SELECT sq.domain,
-               COUNT(*) AS total_count,
-               SUM(ua.is_correct) AS correct_count
-        FROM user_answers ua
-        JOIN session_questions sq
+               COUNT(*)                        AS total_count,
+               SUM(COALESCE(ua.is_correct, 0)) AS correct_count
+        FROM session_questions sq
+        LEFT JOIN user_answers ua
           ON ua.session_id = sq.session_id AND ua.question_id = sq.question_id
-        WHERE ua.session_id = ?
+        WHERE sq.session_id = ?
         GROUP BY sq.domain
         """,
         (session_id,),

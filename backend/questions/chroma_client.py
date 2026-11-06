@@ -7,6 +7,16 @@ from chromadb.utils import embedding_functions
 from questions.models import Question
 
 
+def _parse_options(raw: str) -> list[str]:
+    if not raw:
+        return []
+    try:
+        result = json.loads(raw)
+        return result if isinstance(result, list) else []
+    except json.JSONDecodeError:
+        return [o for o in raw.split("|") if o]
+
+
 @lru_cache(maxsize=4)
 def _get_client(chroma_path: str) -> chromadb.PersistentClient:
     return chromadb.PersistentClient(path=chroma_path)
@@ -62,8 +72,7 @@ def get_question_by_id(
     text = result["documents"][0]
     raw_indices = meta.get("correct_indices")
     correct_indices = json.loads(raw_indices) if raw_indices else None
-    raw_options = meta.get("options", "[]")
-    options = json.loads(raw_options) if raw_options.startswith("[") else raw_options.split("|")
+    options = _parse_options(meta.get("options", ""))
     return Question(
         id=question_id,
         text=text,
@@ -91,7 +100,7 @@ def query_questions(
         where = {"$and": [{"domain": {"$eq": domain}}, {"provider": {"$eq": provider}}]}
     else:
         where = {"domain": {"$eq": domain}}
-    results = collection.get(where=where)
+    results = collection.get(where=where, limit=n + len(exclude_ids) + 10)
 
     questions = []
     for i, qid in enumerate(results["ids"]):
@@ -101,8 +110,7 @@ def query_questions(
         text = results["documents"][i]
         raw_indices = meta.get("correct_indices")
         correct_indices = json.loads(raw_indices) if raw_indices else None
-        raw_opts = meta.get("options", "[]")
-        opts = json.loads(raw_opts) if raw_opts.startswith("[") else raw_opts.split("|")
+        opts = _parse_options(meta.get("options", ""))
         questions.append(
             Question(
                 id=qid,

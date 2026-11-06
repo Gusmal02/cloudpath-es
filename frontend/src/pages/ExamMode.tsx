@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { getResult, startExam, submitAnswer } from '../api/client'
 import { AppHeader } from '../components/AppHeader'
@@ -64,8 +64,6 @@ export function ExamMode() {
   const [error, setError] = useState('')
   const [finished, setFinished] = useState(false)
   const [resuming, setResuming] = useState(false)
-  const sessionRef = useRef<ExamSession | null>(null)
-
   useEffect(() => {
     clearTutorHistory()
   }, [provider]) // eslint-disable-line react-hooks/exhaustive-deps
@@ -75,7 +73,6 @@ export function ExamMode() {
     if (saved) {
       setResuming(true)
       setSession(saved.session)
-      sessionRef.current = saved.session
       setCurrentIdx(saved.currentIdx)
       setSecondsLeft(saved.secondsLeft)
     } else {
@@ -85,7 +82,6 @@ export function ExamMode() {
             console.warn(`Examen iniciado con ${s.questions.length} preguntas (esperadas 30) para ${provider}`)
           }
           setSession(s)
-          sessionRef.current = s
           saveExam(provider, { session: s, currentIdx: 0, secondsLeft: EXAM_SECONDS, provider })
         })
         .catch(() => setError(t.error_load))
@@ -170,7 +166,6 @@ export function ExamMode() {
     startExam(provider, 30)
       .then((s) => {
         setSession(s)
-        sessionRef.current = s
         saveExam(provider, { session: s, currentIdx: 0, secondsLeft: EXAM_SECONDS, provider })
       })
       .catch(() => setError(t.error_load))

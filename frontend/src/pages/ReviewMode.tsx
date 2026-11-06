@@ -32,8 +32,18 @@ export function ReviewMode() {
     clearTutorHistory()
     getDomainProgress(provider).then(setProgress).catch(() => {})
     loadNext([])
-    setTutorContext({ page: 'review', provider, answered: false })
   }, [provider]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    setTutorContext({
+      page: 'review',
+      provider,
+      domain: question?.domain ?? null,
+      questionText: question?.text ?? null,
+      questionOptions: question?.options ?? [],
+      answered,
+    })
+  }, [question?.id, answered]) // eslint-disable-line react-hooks/exhaustive-deps
 
   function loadNext(excludeIds: string[]) {
     setQuestion(null)

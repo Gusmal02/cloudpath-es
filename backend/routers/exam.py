@@ -62,6 +62,7 @@ def exam_start(req: StartExamRequest, db: sqlite3.Connection = Depends(_get_db))
 
     result = start_exam(db=db, provider=req.provider, questions=questions)
     _persist_session_questions(db, result["session_id"], result["_internal"])
+    db.commit()  # atomic: session + questions together
 
     return {"session_id": result["session_id"], "questions": result["questions"]}
 
