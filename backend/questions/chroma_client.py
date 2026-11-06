@@ -100,6 +100,7 @@ def query_questions(
         where = {"$and": [{"domain": {"$eq": domain}}, {"provider": {"$eq": provider}}]}
     else:
         where = {"domain": {"$eq": domain}}
+    # +10 buffer ensures we have enough candidates after filtering excluded ids
     results = collection.get(where=where, limit=n + len(exclude_ids) + 10)
 
     questions = []

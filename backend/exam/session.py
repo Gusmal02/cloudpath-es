@@ -11,6 +11,13 @@ def _now() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
+# TRANSACTION RULE: Only the router/endpoint calls db.commit().
+# Helper functions (start_exam, submit_answer, update_domain_progress, get_result)
+# must NOT call db.commit() — except get_result, which owns the session-close commit.
+# Rationale: a router groups multiple writes (e.g. INSERT session + INSERT questions)
+# into one atomic commit so a failure mid-way does not leave zombie rows.
+
+
 def start_exam(db: sqlite3.Connection, provider: str, questions: list[Question]) -> dict:
     session_id = str(uuid.uuid4())
     db.execute(
@@ -68,7 +75,6 @@ def update_domain_progress(
         """,
         (domain, provider, int(is_correct), _now(), int(is_correct), _now()),
     )
-    db.commit()
 
 
 def submit_answer(

@@ -112,10 +112,14 @@ export function ExamMode() {
     if (!session) return
     setResuming(false)
     if (currentIdx + 1 >= session.questions.length) {
-      const r = await getResult(session.session_id)
-      setResult(r)
-      setFinished(true)
-      clearExam(provider)
+      try {
+        const r = await getResult(session.session_id)
+        setResult(r)
+        setFinished(true)
+        clearExam(provider)
+      } catch {
+        setError('No se pudo obtener el resultado. Intenta de nuevo.')
+      }
     } else {
       const next = currentIdx + 1
       setCurrentIdx(next)
@@ -142,10 +146,14 @@ export function ExamMode() {
 
   async function handleExpire() {
     if (!session) return
-    const r = await getResult(session.session_id)
-    setResult(r)
-    setFinished(true)
-    clearExam(provider)
+    try {
+      const r = await getResult(session.session_id)
+      setResult(r)
+      setFinished(true)
+      clearExam(provider)
+    } catch {
+      setError('No se pudo obtener el resultado. Intenta de nuevo.')
+    }
   }
 
   function handleRestart() {

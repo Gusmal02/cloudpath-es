@@ -82,6 +82,13 @@ def exam_answer(req: AnswerRequest, db: sqlite3.Connection = Depends(_get_db)):
     if question_data is None:
         raise HTTPException(status_code=404, detail="Question not found in session")
 
+    # Load public question to know the number of options for bounds checking
+    settings_obj = get_settings()
+    q_meta = get_question_by_id(req.question_id, "questions", settings_obj.chroma_path)
+    n_options = len(q_meta.options) if q_meta else 0
+    if n_options > 0 and any(i < 0 or i >= n_options for i in chosen):
+        raise HTTPException(status_code=422, detail=f"chosen index out of range (0–{n_options - 1})")
+
     is_correct = submit_answer(
         db=db,
         session_id=req.session_id,
@@ -91,16 +98,14 @@ def exam_answer(req: AnswerRequest, db: sqlite3.Connection = Depends(_get_db)):
         domain=question_data["domain"],
         provider=question_data["provider"],
     )
-    # Fetch explanation and correct options from Chroma now that the answer is submitted
-    settings = get_settings()
-    q = get_question_by_id(req.question_id, "questions", settings.chroma_path)
-    if q is None:
+    db.commit()
+    if q_meta is None:
         logger.error("exam_answer: question %s not found in Chroma for session %s", req.question_id, req.session_id)
     return {
         "is_correct": is_correct,
         "correct_indices": question_data["correct_indices"],
         "correct_index": question_data["correct_indices"][0],
-        "explanation": q.explanation if q else "[Explicación no disponible]",
+        "explanation": q_meta.explanation if q_meta else "[Explicación no disponible]",
     }
 
 

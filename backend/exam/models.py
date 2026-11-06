@@ -11,7 +11,7 @@ class AnswerRequest(BaseModel):
     session_id: str
     question_id: str
     chosen_index: int | None = None          # single-answer (legacy)
-    chosen_indices: list[int] | None = None  # multi-answer
+    chosen_indices: list[int] | None = None  # multi-answer; takes precedence over chosen_index when both are set
 
 
 class StudyAnswerRequest(BaseModel):
