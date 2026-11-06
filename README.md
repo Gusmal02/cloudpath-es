@@ -31,6 +31,7 @@ La idea es seguir expandiéndola — más certificaciones, más niveles (Associa
 - **Modo Repaso** — refuerza los dominios donde tienes menor puntaje histórico
 - **Simulador de Arquitecturas** — canvas drag & drop con servicios reales de cada proveedor, conexiones en 4 direcciones
 - **Análisis What If con IA** — Ollama analiza tu diagrama y devuelve costo estimado, riesgos y sugerencias (opcional)
+- **Tutor IA** — asistente contextual que conoce la pregunta que estás respondiendo; puedes preguntarle por el concepto, pedir que explique la respuesta correcta, o explorar temas relacionados (opcional, requiere Ollama)
 - **Generación de preguntas con IA** — genera preguntas adicionales bajo demanda; las preguntas generadas no están verificadas oficialmente y pueden contener inexactitudes (opcional)
 - **130+ preguntas verificadas** — AWS, GCP y Azure, incluyendo preguntas multi-respuesta
 - **100% gratuita** — sin cuenta, sin suscripción, sin internet obligatorio
