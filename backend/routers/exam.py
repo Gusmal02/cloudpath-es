@@ -1,6 +1,9 @@
+import logging
 from fastapi import APIRouter, Depends, HTTPException
 import json
 import sqlite3
+
+logger = logging.getLogger(__name__)
 from config import get_settings
 from database.sqlite_client import get_db
 from exam.models import StartExamRequest, AnswerRequest, ExamResult
@@ -65,12 +68,7 @@ def exam_start(req: StartExamRequest, db: sqlite3.Connection = Depends(_get_db))
 
 @router.post("/answer")
 def exam_answer(req: AnswerRequest, db: sqlite3.Connection = Depends(_get_db)):
-    question_data = _load_question_data(db, req.session_id, req.question_id)
-
-    if question_data is None:
-        raise HTTPException(status_code=404, detail="Question not found in session")
-
-    # Normalise: accept either chosen_index (legacy) or chosen_indices (multi)
+    # Validate chosen before hitting the DB
     if req.chosen_indices is not None:
         chosen = req.chosen_indices
     elif req.chosen_index is not None:
@@ -79,6 +77,10 @@ def exam_answer(req: AnswerRequest, db: sqlite3.Connection = Depends(_get_db)):
         chosen = None
     if not chosen:
         raise HTTPException(status_code=422, detail="chosen_index or chosen_indices required")
+
+    question_data = _load_question_data(db, req.session_id, req.question_id)
+    if question_data is None:
+        raise HTTPException(status_code=404, detail="Question not found in session")
 
     is_correct = submit_answer(
         db=db,
@@ -92,11 +94,13 @@ def exam_answer(req: AnswerRequest, db: sqlite3.Connection = Depends(_get_db)):
     # Fetch explanation and correct options from Chroma now that the answer is submitted
     settings = get_settings()
     q = get_question_by_id(req.question_id, "questions", settings.chroma_path)
+    if q is None:
+        logger.error("exam_answer: question %s not found in Chroma for session %s", req.question_id, req.session_id)
     return {
         "is_correct": is_correct,
         "correct_indices": question_data["correct_indices"],
         "correct_index": question_data["correct_indices"][0],
-        "explanation": q.explanation if q else "",
+        "explanation": q.explanation if q else "[Explicación no disponible]",
     }
 
 

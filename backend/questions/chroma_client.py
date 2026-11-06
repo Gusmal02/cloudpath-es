@@ -27,16 +27,13 @@ def embed_questions(
     collection_name: str,
     chroma_path: str = "data/chroma",
 ) -> None:
-    collection = _get_collection(collection_name, chroma_path)
-    existing = set(collection.get(ids=[q.id for q in questions])["ids"])
-
-    new_questions = [q for q in questions if q.id not in existing]
-    if not new_questions:
+    if not questions:
         return
 
+    collection = _get_collection(collection_name, chroma_path)
     collection.upsert(
-        ids=[q.id for q in new_questions],
-        documents=[q.text for q in new_questions],
+        ids=[q.id for q in questions],
+        documents=[q.text for q in questions],
         metadatas=[
             {
                 "domain": q.domain,
@@ -47,7 +44,7 @@ def embed_questions(
                 "correct_indices": json.dumps(q.all_correct_indices),
                 "explanation": q.explanation,
             }
-            for q in new_questions
+            for q in questions
         ],
     )
 

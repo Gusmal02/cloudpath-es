@@ -35,7 +35,7 @@ def _get_db():
 
 @router.get("/question")
 def study_question(
-    provider: str = Query(...),
+    provider: Provider = Query(...),
     exclude_ids: list[str] = Query(default=[]),
     db: sqlite3.Connection = Depends(_get_db),
 ):
