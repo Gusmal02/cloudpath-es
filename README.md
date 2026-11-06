@@ -58,41 +58,37 @@ No necesitas hardware avanzado. Funciona en cualquier equipo moderno.
 
 ## Inicio rápido — un solo comando
 
-### Windows (PowerShell)
+### Paso 1 — Instalar dependencias (solo la primera vez)
 
+**Windows (PowerShell):**
 ```powershell
 git clone https://github.com/Gusmal02/cloudpath-es.git
 cd cloudpath-es
 .\setup.ps1
 ```
 
-### Linux / macOS
-
+**Linux / macOS:**
 ```bash
 git clone https://github.com/Gusmal02/cloudpath-es.git
 cd cloudpath-es
 chmod +x setup.sh && ./setup.sh
 ```
 
-El script instala todas las dependencias automáticamente y te indica los siguientes pasos.
+### Paso 2 — Iniciar la aplicación
 
-### Iniciar la aplicación
-
-**Terminal 1 — Backend:**
-```bash
-cd backend
-python main.py
+**Windows:**
+```powershell
+.\start.ps1
 ```
 
-**Terminal 2 — Frontend:**
+**Linux / macOS:**
 ```bash
-cd frontend
-npm run dev
+./start.sh
 ```
 
-Abre [http://localhost:5173](http://localhost:5173) en tu navegador. Las preguntas se cargan automáticamente — no necesitas pasos adicionales.
+Abre [http://localhost:5173](http://localhost:5173). Las preguntas se cargan automáticamente al iniciar. Presiona `Ctrl+C` para detener backend y frontend a la vez.
 
-### Con Docker
+### Con Docker (alternativa — un solo comando sin instalar nada)
 
 ```bash
 docker compose up --build
@@ -124,19 +120,25 @@ cloudpath-es/
 │   ├── database/            # SQLite: sesiones, respuestas, progreso por dominio
 │   ├── questions/           # Carga JSON → ChromaDB (RAG), selector adaptativo
 │   ├── exam/                # Lógica de sesión: barajar opciones, resultados
+│   ├── tutor/               # Motor del tutor IA (contexto por pregunta)
 │   ├── whatif/              # Motor What If: prompt builder, cliente Ollama, parser
-│   └── routers/             # /exam, /study, /progress, /admin, /whatif, /generate
+│   ├── routers/             # /exam, /study, /progress, /admin, /whatif, /generate, /tutor
+│   ├── tests/               # Tests de integración con cliente real (pytest)
+│   └── data/questions/      # Archivos JSON de preguntas (AWS, GCP, Azure)
 ├── frontend/
 │   └── src/
 │       ├── pages/           # Home, ExamMode, StudyMode, ReviewMode, ArchMode, SettingsMode
-│       ├── components/      # QuestionCard, Timer, ProgressBar, WhatIfPanel, ServiceNode
+│       ├── components/      # QuestionCard, Timer, ProgressBar, WhatIfPanel, TutorPanel
+│       ├── hooks/           # useStudyFlow — lógica compartida de estudio/repaso
+│       ├── context/         # TutorContext — estado global del tutor IA
 │       ├── api/client.ts    # Axios hacia /api/* (proxy Vite → backend)
 │       └── i18n/es.json     # Todas las cadenas en español
-├── backend/data/questions/  # Archivos JSON de preguntas (AWS, GCP, Azure)
 ├── docs/
 ├── docker-compose.yml
-├── setup.sh                 # Instalación Linux/macOS
-└── setup.ps1                # Instalación Windows
+├── setup.sh                 # Instala dependencias — Linux/macOS
+├── setup.ps1                # Instala dependencias — Windows
+├── start.sh                 # Inicia backend + frontend — Linux/macOS
+└── start.ps1                # Inicia backend + frontend — Windows
 ```
 
 ---
@@ -153,13 +155,15 @@ Crea un archivo `.json` en `backend/data/questions/`:
     "options": ["Opción A", "Opción B", "Opción C", "Opción D"],
     "correct_index": 0,
     "explanation": "Explicación detallada.",
-    "domain": "Cloud Concepts",
+    "domain": "CLOUD_CONCEPTS",
     "provider": "AWS"
   }
 ]
 ```
 
 **Proveedores válidos:** `AWS`, `GCP`, `AZURE`
+
+**Dominios válidos:** `CLOUD_CONCEPTS`, `SECURITY`, `TECHNOLOGY`, `BILLING`, `AI_ML`
 
 Reinicia el backend y las preguntas se indexan automáticamente.
 

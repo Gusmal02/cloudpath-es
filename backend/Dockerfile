@@ -2,9 +2,13 @@ FROM python:3.12-slim
 
 WORKDIR /app
 
-RUN pip install uv
+# Install uv for fast dependency resolution
+RUN pip install uv --quiet
 
-COPY pyproject.toml .
+# Copy dependency manifest first for layer caching
+COPY pyproject.toml uv.lock ./
+
+# Install all project dependencies from the lock file (no pytest in prod)
 RUN uv pip install --system --no-cache \
     "fastapi>=0.162.0" \
     "uvicorn>=0.54.0" \
@@ -14,7 +18,7 @@ RUN uv pip install --system --no-cache \
 
 COPY . .
 
-RUN mkdir -p data/questions data/chroma
+RUN mkdir -p data/questions data/chroma data/db
 
 EXPOSE 8000
 

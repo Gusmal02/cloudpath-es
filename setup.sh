@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
+# CloudPath ES — instalación de dependencias (Linux/macOS)
 set -euo pipefail
 
-# CloudPath ES — setup script (Linux/macOS)
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 echo "=== CloudPath ES — setup ==="
@@ -23,11 +23,10 @@ fi
 echo "[backend] Creando entorno virtual con uv..."
 cd "$ROOT/backend"
 uv python pin 3.12
-uv venv
-uv pip install -r pyproject.toml
+uv sync
 
-# Crear directorios de datos del backend
-mkdir -p "$ROOT/backend/data/questions" "$ROOT/backend/data/chroma"
+# Crear directorios de datos
+mkdir -p "$ROOT/backend/data/questions" "$ROOT/backend/data/chroma" "$ROOT/backend/data"
 
 # Frontend
 echo "[frontend] Instalando dependencias npm..."
@@ -37,11 +36,14 @@ npm install
 echo ""
 echo "=== Listo ==="
 echo ""
-echo "1. Inicia el backend:   cd backend && python main.py"
-echo "2. Inicia el frontend:  cd frontend && npm run dev"
-echo "   Las preguntas se cargan automáticamente al iniciar el backend."
+echo "Para iniciar la aplicación, ejecuta desde la raíz del proyecto:"
+echo ""
+echo "  ./start.sh"
+echo ""
+echo "O con Docker:"
+echo ""
+echo "  docker compose up --build"
 echo ""
 echo "Opcional — IA local (análisis What If + generación de preguntas):"
-echo "   ollama pull llama3.2:3b"
+echo "  ollama pull llama3.2:3b"
 echo ""
-echo "O usa Docker: docker compose up --build"
