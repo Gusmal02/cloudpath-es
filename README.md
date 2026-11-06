@@ -51,7 +51,7 @@ No necesitas hardware avanzado. Funciona en cualquier equipo moderno.
 | [uv](https://astral.sh/uv) | cualquiera | Gestor de paquetes Python, se instala solo |
 | RAM (modo normal) | 512 MB | Sin IA local |
 | RAM (con Ollama) | 4 GB recomendado | Solo si activas las funciones de IA |
-| Ollama | cualquiera | Opcional — solo para análisis What If y generación de preguntas |
+| Ollama | cualquiera | Opcional — para Tutor IA, análisis What If y generación de preguntas |
 | GPU | No requerida | La IA corre en CPU |
 | Sistema operativo | Windows / macOS / Linux | |
 
@@ -101,11 +101,19 @@ Abre [http://localhost:3000](http://localhost:3000).
 
 ## IA Local con Ollama (opcional)
 
-Dos funciones usan IA local: el análisis What If del simulador de arquitecturas y la generación de preguntas adicionales. Ambas son completamente opcionales.
+Tres funciones usan IA local, todas opcionales e independientes entre sí:
+
+| Función | Dónde se activa |
+|---|---|
+| **Tutor IA** | Panel lateral en Modo Estudio y Modo Repaso |
+| **Análisis What If** | Botón "Analizar" en el Simulador de Arquitecturas |
+| **Generación de preguntas** | Configuración (ícono ⚙️ en el header) |
+
+Para activarlas:
 
 1. Descarga [Ollama](https://ollama.com) e instálalo
 2. Descarga el modelo: `ollama pull llama3.2:3b` (~2 GB, solo la primera vez)
-3. En la app, ve a **Configuración** (ícono ⚙️ en el header) para activar la generación de preguntas
+3. Asegúrate de que Ollama esté corriendo antes de iniciar CloudPath ES
 
 El modelo corre localmente en tu CPU. No envía datos a ningún servidor externo.
 
@@ -148,6 +156,7 @@ cloudpath-es/
 
 Crea un archivo `.json` en `backend/data/questions/`:
 
+**Pregunta de respuesta única:**
 ```json
 [
   {
@@ -157,7 +166,25 @@ Crea un archivo `.json` en `backend/data/questions/`:
     "correct_index": 0,
     "explanation": "Explicación detallada.",
     "domain": "CLOUD_CONCEPTS",
-    "provider": "AWS"
+    "provider": "AWS",
+    "difficulty": "easy"
+  }
+]
+```
+
+**Pregunta de respuesta múltiple** (añade `correct_indices` con todos los índices correctos):
+```json
+[
+  {
+    "id": "unique-id-multi",
+    "text": "¿Cuáles de las siguientes opciones son servicios de cómputo de AWS? (Elige 2)",
+    "options": ["EC2", "S3", "Lambda", "RDS"],
+    "correct_index": 0,
+    "correct_indices": [0, 2],
+    "explanation": "EC2 y Lambda son servicios de cómputo. S3 es almacenamiento y RDS es base de datos.",
+    "domain": "TECHNOLOGY",
+    "provider": "AWS",
+    "difficulty": "medium"
   }
 ]
 ```
@@ -165,6 +192,8 @@ Crea un archivo `.json` en `backend/data/questions/`:
 **Proveedores válidos:** `AWS`, `GCP`, `AZURE`
 
 **Dominios válidos:** `CLOUD_CONCEPTS`, `SECURITY`, `TECHNOLOGY`, `BILLING`, `AI_ML`
+
+**Dificultades válidas:** `easy`, `medium`, `hard`
 
 Reinicia el backend y las preguntas se indexan automáticamente.
 
